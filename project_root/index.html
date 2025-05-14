@@ -22,7 +22,7 @@
     <button onclick="toggleVisibility('qos-issue')">10. QoS Configuration Issues</button>
   </div>
 
-  <div id="ip-conflict" class="problem-details">
+<div id="ip-conflict" class="problem-details">
     <h2>1. IP Address Conflict (Network Layer - Layer 3)</h2>
 
     <h3>Problem Definition:</h3>
@@ -131,6 +131,64 @@
       <li>Document IP usage and consider using IP address management tools.</li>
     </ol>
   </div>
+<div id="Inter_vlan_communication_problem">
+  <h2>2. Inter-Vlan Routing Issue</h2>
+  <h3>Problem Definition:</h3>
+  <p>
+    Inter-VLAN routing is the process of forwarding traffic between different VLANs (Virtual Local Area Networks) on a network. 
+    This is typically done using a Layer 3 device, such as a router or a Layer 3 switch. 
+    Without proper inter-VLAN routing, devices in different VLANs cannot communicate with each other.
+  </p>
+  <h3>Potential Causes:</h3>
+  <ul>
+    <li>Missing or misconfigured VLAN interfaces on the router or Layer 3 switch.</li>
+    <li>Incorrect IP addressing or subnetting for VLANs.</li>
+    <li>Switchport configurations not set to trunk mode for inter-VLAN communication.</li>
+  </ul>
+  <h3>Simulation File:</h3>
+  <a href="simulations/Inter_VLAN_Routing.pkt" download>Download Packet Tracer Simulation</a>
+
+  <h3>Solution Steps:</h3>
+  <ol>
+    <li>Check connection</li>
+    <img src="images/inter_vlan_routing/check_connection.png" alt="Inter VLAN communication problem" style="width: 50%;">
+    <li>Check configuration on switch</li>
+    <img src="images/inter_vlan_routing/check_vlan_on_switch.png" alt="Inter VLAN communication problem" style="width: 50%;">
+    <p>On switch gigabitEthernet0/1 to router must be trunk mode because it is connected to router</p>
+    <img src="images/inter_vlan_routing/g01accessmode.png" alt="Inter VLAN communication problem" style="width: 50%;">
+    <p>Fix it:</p>
+    <pre><code>
+    configure terminal
+    interface gigabitEthernet0/1
+    switchport mode trunk
+    switchport trunk allowed vlan 10,30
+    </code></pre>
+    <img src="images/inter_vlan_routing/g01totrunkmode.png" alt="Inter VLAN communication problem" style="width: 50%;">
+    <p>Check configuration on router</p>
+    <img src="images/inter_vlan_routing/g01totrunkmode.png" alt="Inter VLAN communication problem" style="width: 50%;">
+    <p>g01.10 g01.30 are sub interfaces of g01 and they are configured with IP address. Their encapsulation type is dot1q and they must match with the VLAN ID</p>
+    <img src="images/inter_vlan_routing/router_configuration.png" alt="Inter VLAN communication problem" style="width: 50%;">
+    <p>Fix it:</p>
+    <pre><code>
+    configure terminal
+    interface gigabitEthernet0/1.10
+    no encapsulation dot1Q 30
+    exit
+    interface gigabitEthernet0/1.30
+    no encapsulation dot1Q 10
+    encapsulation dot1Q 30
+    ip address 172.17.30.1 255.255.255.0
+    exit
+    interface gigabitEthernet0/1.10
+    encapsulation dot1Q 10
+    ip address 172.17.10.1 255.255.255.0
+    no shutdown
+    exit
+    </code></pre>
+    <p>After that, try to ping from one VLAN to another to check if it is working</p>
+    <img src="images/inter_vlan_routing/verify_after_solution.png" alt="Inter VLAN communication problem" style="width: 50%;">
+  </ol>
+</div>
 <div id="dhcp-issue" class="problem-details">
   <h2>3. DHCP Server Issues</h2>
   <h3>Problem Definition:</h3>
