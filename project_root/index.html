@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Final Design Project - Network Issues</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <h1>Network Problem Guide - Final Project</h1>
+
+  <div class="problem-list">
+    <button onclick="toggleVisibility('ip-conflict')">1. IP Address Conflict</button>
+    <button onclick="toggleVisibility('Inter_vlan_communication_problem')">2. Inter Vlan Communication Problem</button>
+    <button onclick="toggleVisibility('dhcp-issue')">3. DHCP Server Issues</button>
+    <button onclick="toggleVisibility('dns-issue')">4. DNS Resolution Problems</button>
+    <button onclick="toggleVisibility('firewall-issue')">5. Firewall Misconfiguration</button>
+    <button onclick="toggleVisibility('nat-issue')">6. NAT Configuration Issues</button>
+    <button onclick="toggleVisibility('wifi-issue')">7. Wi-Fi Connectivity Problems</button>
+    <button onclick="toggleVisibility('switch-loop')">8. Switch Loop Issues</button>
+    <button onclick="toggleVisibility('mtu-issue')">9. MTU Configuration Problems</button>
+    <button onclick="toggleVisibility('qos-issue')">10. QoS Configuration Issues</button>
+  </div>
+
+  <div id="ip-conflict" class="problem-details">
+    <h2>1. IP Address Conflict (Network Layer - Layer 3)</h2>
+
+    <h3>Problem Definition:</h3>
+    <p>
+      An IP address conflict occurs when two or more devices on the same network are configured with the same IP address. 
+      This leads to unexpected behavior, communication errors, and loss of connectivity for affected devices.
+    </p>
+
+    <h3>Potential Causes:</h3>
+    <ul>
+      <li>Manual static IP assignment errors by administrators.
+        <p>When administrators manually assign static IP addresses, they may accidentally assign the same IP to multiple devices, leading to conflicts.</p>
+      </li>
+      <li>Improper or overlapping DHCP address pool settings.
+        <p>DHCP servers may be configured with overlapping address pools, causing multiple devices to receive the same IP address.</p>
+      </li>
+      <li>Device cloning or OS imaging without updating IP settings.
+        <p>Cloning devices or using OS images without reconfiguring network settings can result in duplicate IP addresses across devices.</p>
+      </li>
+      <li>Rejoining devices attempting to use old IPs.
+        <p>Devices that were previously disconnected from the network may attempt to reuse their old IP addresses, which might already be assigned to another device.</p>
+      </li>
+    </ul>
+
+    <h3>Simulation File:</h3>
+    <p>
+      <a href="simulations/ip_conflict.pka" download>Download Packet Tracer Simulation</a>
+      <h3>Table: IP configuration of devices</h3>
+    </p> 
+    <table>
+    <tr>
+        <th>Device</th>
+        <th>IP Address</th>
+        <th>Subnet Mask</th>
+        <th>Default Gateway</th>
+    </tr>
+    <tr>
+        <td>PC0</td>
+        <td>192.168.1.10</td>
+        <td>255.255.255.0</td>
+        <td>192.168.1.1</td>
+    </tr>
+    <tr>
+        <td>PC1</td>
+        <td>192.168.1.11</td>
+        <td>255.255.255.0</td>
+        <td>192.168.1.1</td>
+    </tr>
+    <tr>
+        <td>PC2</td>
+        <td>192.168.1.10</td>
+        <td>255.255.255.0</td>
+        <td>192.168.1.1</td>
+    </tr>
+    <tr>
+        <td>Switch0</td>
+        <td>192.168.1.100</td>
+        <td>255.255.255.0</td>
+        <td>—</td>
+    </tr>
+    </table>
+
+    <h3>Verifying Connectivity with Ping</h3>
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-around; margin-top: 10px;">
+    <div style="flex: 0 0 48%; max-width: 48%;">
+    <img src="images/ipconf/ip_conflict_1.png" alt="IP Conflict Simulation" style="width: 100%;">
+    </div>
+    <div style="flex: 0 0 48%; max-width: 48%;">
+    <img src="images/ipconf/ip_conflict_2.png" alt="IP Conflict Simulation" style="width: 100%;">
+    </div>
+    <div style="flex: 0 0 100%; max-width: 100%; margin-top: 20px;">
+    <img src="images/ipconf/ip_conflict_3.png" alt="IP Conflict Simulation" style="width: 100%; max-width: 600px; display: block; margin: 0 auto;">
+    </div>
+    </div>
+
+    <h3>Solution Steps:</h3>
+    <ol>
+      <li>Scan the network using tools like <code>arp -a</code> or network mapping to detect duplicate IPs.</li>
+      <img src="images/ipconf/ip_conflict_4.png" alt="IP Conflict Simulation" style="width: 100%; max-width: 600px;">
+      <li>Identify devices sharing the same IP manually or through simulation.</li>
+      <li>Reassign a unique IP to one of the conflicting devices (e.g., change from 192.168.1.10 to 192.168.1.12).</li>
+      <img src="images/ipconf/ip_conflict_5.png" alt="IP Conflict Simulation" style="width: 100%; max-width: 600px;">
+      <li>Check and correct DHCP server configuration to prevent overlapping assignments.
+        <ol>
+          <li>Click on the router in Packet Tracer and switch to the <strong>CLI</strong> tab.</li>
+          <li>Check the DHCP pool configuration by running the following command:
+            <pre><code>show running-config | include dhcp</code></pre>
+          </li>
+          <li>If there is an IP range conflict, correct the DHCP settings:
+            <pre><code>
+            configure terminal
+            ip dhcp excluded-address 192.168.1.10 192.168.1.20
+            ip dhcp pool MYPOOL
+            network 192.168.1.0 255.255.255.0
+            default-router 192.168.1.1
+            end
+            </code></pre>
+          </li>
+          <li>Restart the DHCP service to apply the changes:
+            <pre><code>clear ip dhcp binding *</code></pre>
+          </li>
+        </ol>
+      </li>
+      <li>Ping test all IPs to verify uniqueness and restore connectivity.</li>
+      <img src="images/ipconf/ip_conflict_9.png" alt="IP Conflict Simulation" style="width: 100%; max-width: 600px;">
+      <li>Document IP usage and consider using IP address management tools.</li>
+    </ol>
+  </div>
+<div id="Inter_vlan_communication_problem">
+  <h2>2. Inter-Vlan Routing Issue</h2>
+  <h3>Problem Definition:</h3>
+  <p>
+    Inter-VLAN routing is the process of forwarding traffic between different VLANs (Virtual Local Area Networks) on a network. 
+    This is typically done using a Layer 3 device, such as a router or a Layer 3 switch. 
+    Without proper inter-VLAN routing, devices in different VLANs cannot communicate with each other.
+  </p>
+  <h3>Potential Causes:</h3>
+  <ul>
+    <li>Missing or misconfigured VLAN interfaces on the router or Layer 3 switch.</li>
+    <li>Incorrect IP addressing or subnetting for VLANs.</li>
+    <li>Switchport configurations not set to trunk mode for inter-VLAN communication.</li>
+  </ul>
+  <h3>Simulation File:</h3>
+  <a href="simulations/Inter_VLAN_Routing.pkt" download>Download Packet Tracer Simulation</a>
+
+  <h3>Solution Steps:</h3>
+  <ol>
+    <li>Check connection</li>
+    <img src="images/inter_vlan_routing/check_connection.png" alt="Inter VLAN communication problem" style="width: 50%;">
+    <li>Check configuration on switch</li>
+    <img src="images/inter_vlan_routing/check_vlan_on_switch.png" alt="Inter VLAN communication problem" style="width: 50%;">
+    <p>On switch gigabitEthernet0/1 to router must be trunk mode because it is connected to router</p>
+    <img src="images/inter_vlan_routing/g01accessmode.png" alt="Inter VLAN communication problem" style="width: 50%;">
+    <p>Fix it:</p>
+    <pre><code>
+    configure terminal
+    interface gigabitEthernet0/1
+    switchport mode trunk
+    switchport trunk allowed vlan 10,30
+    </code></pre>
+    <img src="images/inter_vlan_routing/g01totrunkmode.png" alt="Inter VLAN communication problem" style="width: 50%;">
+    <p>Check configuration on router</p>
+    <img src="images/inter_vlan_routing/g01totrunkmode.png" alt="Inter VLAN communication problem" style="width: 50%;">
+    <p>g01.10 g01.30 are sub interfaces of g01 and they are configured with IP address. Their encapsulation type is dot1q and they must match with the VLAN ID</p>
+    <img src="images/inter_vlan_routing/router_configuration.png" alt="Inter VLAN communication problem" style="width: 50%;">
+    <p>Fix it:</p>
+    <pre><code>
+    configure terminal
+    interface gigabitEthernet0/1.10
+    no encapsulation dot1Q 30
+    exit
+    interface gigabitEthernet0/1.30
+    no encapsulation dot1Q 10
+    encapsulation dot1Q 30
+    ip address 172.17.30.1 255.255.255.0
+    exit
+    interface gigabitEthernet0/1.10
+    encapsulation dot1Q 10
+    ip address 172.17.10.1 255.255.255.0
+    no shutdown
+    exit
+    </code></pre>
+    <p>After that, try to ping from one VLAN to another to check if it is working</p>
+    <img src="images/inter_vlan_routing/verify_after_solution.png" alt="Inter VLAN communication problem" style="width: 50%;">
+  </ol>
+</div>
+
+<div id="dhcp-issue" class="problem-details">
+  <h2>3. DHCP Server Issues</h2>
+  <h3>Problem Definition:</h3>
+  <p>Devices fail to obtain IP addresses automatically due to DHCP server misconfigurations or failures.</p>
+  <h3>Potential Causes:</h3>
+  <ul>
+    <li>DHCP server is not enabled or running.</li>
+    <li>IP address pool is exhausted.</li>
+    <li>Network devices are not configured to use DHCP.</li>
+  </ul>
+  <h3>Solution Steps:</h3>
+  <ol>
+    <li>Verify that the DHCP server is enabled and running.</li>
+    <li>Check the IP address pool and expand it if necessary.</li>
+    <li>Ensure devices are set to obtain IP addresses automatically.</li>
+  </ol>
+</div>
+
+<div id="dns-issue" class="problem-details">
+  <h2>4. DNS Resolution Problems</h2>
+  <h3>Problem Definition:</h3>
+  <p>Devices cannot resolve domain names to IP addresses, leading to connectivity issues.</p>
+  <h3>Potential Causes:</h3>
+  <ul>
+    <li>Incorrect DNS server configuration on devices.</li>
+    <li>DNS server is down or unreachable.</li>
+    <li>DNS cache corruption.</li>
+  </ul>
+  <h3>Solution Steps:</h3>
+  <ol>
+    <li>Verify DNS server settings on devices.</li>
+    <li>Check the status of the DNS server and restart if necessary.</li>
+    <li>Clear DNS cache using <code>ipconfig /flushdns</code>.</li>
+  </ol>
+</div>
+
+<div id="firewall-issue" class="problem-details">
+  <h2>5. Firewall Misconfiguration</h2>
+  <h3>Problem Definition:</h3>
+  <p>Firewall rules block legitimate traffic, causing connectivity issues.</p>
+  <h3>Potential Causes:</h3>
+  <ul>
+    <li>Overly restrictive firewall rules.</li>
+    <li>Incorrect port or protocol settings.</li>
+    <li>Firewall software or hardware malfunction.</li>
+  </ul>
+  <h3>Solution Steps:</h3>
+  <ol>
+    <li>Review and update firewall rules to allow necessary traffic.</li>
+    <li>Verify port and protocol configurations.</li>
+    <li>Restart or update the firewall software or hardware.</li>
+  </ol>
+</div>
+
+<div id="nat-issue" class="problem-details">
+  <h2>6. NAT Configuration Issues</h2>
+  <h3>Problem Definition:</h3>
+  <p>Devices on a private network cannot access the internet due to NAT misconfigurations.</p>
+  <h3>Potential Causes:</h3>
+  <ul>
+    <li>Incorrect NAT rules or settings.</li>
+    <li>Overlapping IP address ranges.</li>
+    <li>Insufficient NAT resources on the router.</li>
+  </ul>
+  <h3>Solution Steps:</h3>
+  <ol>
+    <li>Verify and correct NAT rules on the router.</li>
+    <li>Ensure IP address ranges do not overlap.</li>
+    <li>Upgrade router resources if necessary.</li>
+  </ol>
+</div>
+
+<div id="wifi-issue" class="problem-details">
+  <h2>7. Wi-Fi Connectivity Problems</h2>
+  <h3>Problem Definition:</h3>
+  <p>Devices experience slow or intermittent Wi-Fi connections.</p>
+  <h3>Potential Causes:</h3>
+  <ul>
+    <li>Signal interference from other devices.</li>
+    <li>Incorrect Wi-Fi settings or credentials.</li>
+    <li>Overloaded access points.</li>
+  </ul>
+  <h3>Solution Steps:</h3>
+  <ol>
+    <li>Reduce interference by changing the Wi-Fi channel.</li>
+    <li>Verify Wi-Fi settings and credentials on devices.</li>
+    <li>Add more access points to distribute the load.</li>
+  </ol>
+</div>
+
+<div id="switch-loop" class="problem-details">
+  <h2>8. Switch Loop Issues</h2>
+  <h3>Problem Definition:</h3>
+  <p>Network experiences broadcast storms due to switch loops.</p>
+  <h3>Potential Causes:</h3>
+  <ul>
+    <li>Redundant connections between switches without STP (Spanning Tree Protocol).</li>
+    <li>Misconfigured switch ports.</li>
+  </ul>
+  <h3>Solution Steps:</h3>
+  <ol>
+    <li>Enable STP on all switches.</li>
+    <li>Remove redundant connections or configure them properly.</li>
+  </ol>
+</div>
+
+<div id="mtu-issue" class="problem-details">
+  <h2>9. MTU Configuration Problems</h2>
+  <h3>Problem Definition:</h3>
+  <p>Large packets are dropped due to incorrect MTU settings.</p>
+  <h3>Potential Causes:</h3>
+  <ul>
+    <li>MTU size mismatch between devices.</li>
+    <li>Fragmentation issues.</li>
+  </ul>
+  <h3>Solution Steps:</h3>
+  <ol>
+    <li>Set the MTU size to match across all devices.</li>
+    <li>Enable packet fragmentation if necessary.</li>
+  </ol>
+</div>
+
+<div id="qos-issue" class="problem-details">
+  <h2>10. QoS Configuration Issues</h2>
+  <h3>Problem Definition:</h3>
+  <p>Critical traffic experiences delays due to lack of QoS policies.</p>
+  <h3>Potential Causes:</h3>
+  <ul>
+    <li>No QoS policies configured.</li>
+    <li>Incorrect prioritization of traffic.</li>
+  </ul>
+  <h3>Solution Steps:</h3>
+  <ol>
+    <li>Implement QoS policies to prioritize critical traffic.</li>
+    <li>Verify and adjust traffic prioritization settings.</li>
+  </ol>
+</div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
