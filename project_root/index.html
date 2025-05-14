@@ -13,7 +13,7 @@
     <button onclick="toggleVisibility('ip-conflict')">1. IP Address Conflict</button>
     <button onclick="toggleVisibility('Inter_vlan_communication_problem')">2. Inter Vlan Communication Problem</button>
     <button onclick="toggleVisibility('dhcp-issue')">3. DHCP Server Issues</button>
-    <button onclick="toggleVisibility('dns-issue')">4. DNS Resolution Problems</button>
+    <button onclick="toggleVisibility('dhcp-spoofing')">4. DHCP Spoofing Attack: Prevention & Mitigation</button>
     <button onclick="toggleVisibility('firewall-issue')">5. Firewall Misconfiguration</button>
     <button onclick="toggleVisibility('nat-issue')">6. NAT Configuration Issues</button>
     <button onclick="toggleVisibility('wifi-issue')">7. Wi-Fi Connectivity Problems</button>
@@ -49,7 +49,7 @@
 
     <h3>Simulation File:</h3>
     <p>
-      <a href="simulations/ip_conflict.pka" download>Download Packet Tracer Simulation</a>
+      <a href="simulations/ip_conflict.pkt" download>Download Packet Tracer Simulation</a>
       <h3>Table: IP configuration of devices</h3>
     </p> 
     <table>
@@ -146,7 +146,7 @@
     <li>Switchport configurations not set to trunk mode for inter-VLAN communication.</li>
   </ul>
   <h3>Simulation File:</h3>
-  <a href="simulations/Inter_VLAN_Routing.pkt" download>Download Packet Tracer Simulation</a>
+  <a href="simulations/Inter_VLAN_Routing.pka" download>Download Packet Tracer Simulation</a>
 
   <h3>Solution Steps:</h3>
   <ol>
@@ -211,7 +211,7 @@
   </ul>
   <h3>Simulation File:</h3>
   <p>
-  <a href="simulations/dhcp_issues.pka" download>Download Packet Tracer Simulation</a>
+  <a href="simulations/dhcp_issues.pkt" download>Download Packet Tracer Simulation</a>
   <h3>DHCP fail message on pc 8</h3>
   <img src="images/dhcp/failed_message.png" alt="DHCP Fail Message" style="width: 100%; max-width: 600px;">
   <h3>Solution Steps:</h3>
@@ -241,10 +241,10 @@ Router(dhcp-config)# exit
     <strong>Check the IP address pool and expand it if necessary</strong><br>
     If one or more PCs do not receive an IP address (e.g., PC9), the address pool may be too small. Check for excluded addresses:
     <pre>
-Router# show running-config
+      Router# show running-config
     </pre>
     <img src="images/dhcp/excluded_addresses.png" alt="Excluded Addresses" style="width: 100%; max-width: 600px;">
-    If the range is too narrow, reduce the excluded IP range like this:
+    <p>If the range is too narrow, reduce the excluded IP range like this:</p>
     <pre>
 Router(config)# no ip dhcp excluded-address 192.168.1.1 192.168.1.191
 Router(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.189
@@ -268,22 +268,137 @@ Router(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.189
 
 </div>
 
-<div id="dns-issue" class="problem-details">
-  <h2>4. DNS Resolution Problems</h2>
+<div id="dhcp-spoofing" class="problem-details">
+  <h2>4. DHCP Spoofing Attack: Prevention & Mitigation</h2>
+  
   <h3>Problem Definition:</h3>
-  <p>Devices cannot resolve domain names to IP addresses, leading to connectivity issues.</p>
+  <p>An attacker introduces a rogue DHCP server to distribute malicious network configurations, potentially intercepting or redirecting network traffic.</p>
+  
   <h3>Potential Causes:</h3>
   <ul>
-    <li>Incorrect DNS server configuration on devices.</li>
-    <li>DNS server is down or unreachable.</li>
-    <li>DNS cache corruption.</li>
+    <li>Unsecured switch ports allowing unauthorized DHCP servers.</li>
+    <li>Missing DHCP snooping protection on network switches.</li>
+    <li>Lack of port security measures.</li>
+    <li>Physical access to network infrastructure.</li>
   </ul>
+  
+  <h3>Simulation File:</h3>
+  <p>
+    <a href="simulations/DHCP_Snooping_Attack.pkt" download>Download Packet Tracer Simulation</a>
+  </p>
+  
+  <h3>DHCP Spoofing Attack Simulation:</h3>
+  <img src="images/dhcp_spoofing/simulation.png" alt="DHCP Spoofing Attack Simulation" style="width: 100%; max-width: 600px;">
+  
+  <table>
+    <thead>
+        <tr>
+            <th>Device Type</th>
+            <th>IP Address</th>
+            <th>Connected Port</th>
+            <th>Details</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Legitimate DHCP Server</td>
+            <td>192.168.1.100</td>
+            <td>Switch Port 5</td>
+            <td>IP Range: 192.168.1.10-50</td>
+            <td>Secure</td>
+        </tr>
+        <tr>
+            <td>Rogue DHCP Server</td>
+            <td>192.168.2.100</td>
+            <td>Switch Port 6</td>
+            <td>IP Range: 192.168.2.10-50</td>
+            <td class="warning">ATTACKER</td>
+        </tr>
+        <tr class="warning">
+            <td>Workstation 1</td>
+            <td>192.168.2.6</td>
+            <td>Switch Port 1</td>
+            <td>Compromised by rogue DHCP</td>
+            <td class="warning">COMPROMISED</td>
+        </tr>
+        <tr>
+            <td>Workstation 2</td>
+            <td>192.168.1.2</td>
+            <td>Switch Port 2</td>
+            <td>Normal client</td>
+            <td>Secure</td>
+        </tr>
+        <tr>
+            <td>Workstation 3</td>
+            <td>192.168.1.3</td>
+            <td>Switch Port 3</td>
+            <td>Normal client</td>
+            <td>Secure</td>
+        </tr>
+        <tr class="warning">
+            <td>Workstation 4</td>
+            <td>192.168.2.5</td>
+            <td>Switch Port 4</td>
+            <td>Compromised by rogue DHCP</td>
+            <td class="warning">COMPROMISED</td>
+        </tr>
+    </tbody>
+  </table>
+  
+  <img src="images/dhcp_spoofing/spoofed_pcs.png" alt="Rogue DHCP Server" style="width: 100%; max-width: 600px;">
+  
   <h3>Solution Steps:</h3>
   <ol>
-    <li>Verify DNS server settings on devices.</li>
-    <li>Check the status of the DNS server and restart if necessary.</li>
-    <li>Clear DNS cache using <code>ipconfig /flushdns</code>.</li>
+    <li>
+      <strong>Enable DHCP Snooping:</strong>
+      <p>With this, all ports are untrusted by default, and only the trusted ports can send DHCP messages.</p>
+      <pre><code>
+ip dhcp snooping
+      </code></pre>
+    </li>
+    
+    <li>
+      <strong>Configure Trusted Ports:</strong>
+      <pre><code>
+interface fastethernet 0/5
+ip dhcp snooping trust
+no ip dh snooping information option 
+exit
+      </code></pre>
+    </li>
+    
+    <li>
+      <strong>Verify Configuration:</strong>
+      <pre><code>
+
+do show ip dhcp snooping
+show ip dhcp snooping binding
+
+      </code></pre>
+    </li>
+    <img src="images/dhcp_spoofing/fixed.png" alt="Verify Configuration" style="width: 100%; max-width: 600px;">
+    
+    <li>
+      <strong>Implement Additional Protections:</strong>
+      <ul>
+        <li>Port security to limit device connections.</li>
+        <li>Dynamic ARP Inspection (DAI).</li>
+        <li>IP Source Guard.</li>
+      </ul>
+    </li>
   </ol>
+  
+  <h3>Expected Results:</h3>
+  <ul>
+    <li>Only authorized DHCP servers can distribute IP addresses.</li>
+    <li>Rogue DHCP server responses are blocked.</li>
+    <li>Network clients receive legitimate configuration.</li>
+  </ul>
+  
+  <div class="note">
+    <strong>Remember:</strong> Attack = Spoofing | Defense = Snooping
+  </div>
 </div>
 
 <div id="firewall-issue" class="problem-details">
