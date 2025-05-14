@@ -286,7 +286,52 @@ Router(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.189
   <p>
     <a href="simulations/DHCP_Snooping_Attack.pkt" download>Download Packet Tracer Simulation</a>
   </p>
+  <h3>Router Configuration for Saving Current Status:</h3>
+  <p>I was unable to save the current status and initial configurations on Packet Tracer, use the following commands:</p>
   
+  <h4>For Router 2:</h4>
+  <pre><code>
+enable
+configure terminal
+interface gigabitEthernet0/0/0
+no shutdown
+exit
+
+ip dhcp pool CCNA
+network 192.168.2.0 255.255.255.0
+default-router 192.168.2.100
+dns-server 192.168.2.50
+exit
+
+interface gigabitEthernet0/0/0
+ip address 192.168.2.100 255.255.255.0
+no shutdown
+exit
+exit
+write memory
+  </code></pre>
+
+  <h4>For Router 1:</h4>
+  <pre><code>
+enable
+configure terminal
+interface gigabitEthernet0/0/0
+no shutdown
+exit
+
+ip dhcp pool CNC
+network 192.168.1.0 255.255.255.0
+default-router 192.168.1.100
+dns-server 192.168.1.50
+exit
+
+interface gigabitEthernet0/0/0
+ip address 192.168.1.100 255.255.255.0
+no shutdown
+exit
+exit
+write memory
+  </code></pre>
   <h3>DHCP Spoofing Attack Simulation:</h3>
   <img src="images/dhcp_spoofing/simulation.png" alt="DHCP Spoofing Attack Simulation" style="width: 100%; max-width: 600px;">
   
