@@ -14,7 +14,7 @@
     <button onclick="toggleVisibility('Inter_vlan_communication_problem')">2. Inter Vlan Communication Problem</button>
     <button onclick="toggleVisibility('dhcp-issue')">3. DHCP Server Issues</button>
     <button onclick="toggleVisibility('dhcp-spoofing')">4. DHCP Spoofing Attack: Prevention & Mitigation</button>
-    <button onclick="toggleVisibility('firewall-issue')">5. Firewall Misconfiguration</button>
+    <button onclick="toggleVisibility('default-gateway-issue')">5. Default Gateway Problem</button>
     <button onclick="toggleVisibility('nat-issue')">6. NAT Configuration Issues</button>
     <button onclick="toggleVisibility('wifi-issue')">7. Wi-Fi Connectivity Problems</button>
     <button onclick="toggleVisibility('switch-loop')">8. Switch Loop Issues</button>
@@ -267,7 +267,6 @@ Router(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.189
 </ol>
 
 </div>
-
 <div id="dhcp-spoofing" class="problem-details">
   <h2>4. DHCP Spoofing Attack: Prevention & Mitigation</h2>
   
@@ -445,22 +444,124 @@ show ip dhcp snooping binding
     <strong>Remember:</strong> Attack = Spoofing | Defense = Snooping
   </div>
 </div>
-
-<div id="firewall-issue" class="problem-details">
-  <h2>5. Firewall Misconfiguration</h2>
+<div id="default-gateway-issue" class="problem-details">
+  <h2>5. Default Gateway Issue</h2>
   <h3>Problem Definition:</h3>
-  <p>Firewall rules block legitimate traffic, causing connectivity issues.</p>
+  <p>The default gateway is a critical network component that acts as an access point or IP router for devices
+     to communicate with other networks, including the internet. Issues with the default gateway can disrupt network 
+     connectivity and prevent devices from accessing external resources.</p>
   <h3>Potential Causes:</h3>
   <ul>
-    <li>Overly restrictive firewall rules.</li>
-    <li>Incorrect port or protocol settings.</li>
-    <li>Firewall software or hardware malfunction.</li>
+    <li>Incorrect default gateway IP address configured.
+      <p>If the default gateway IP is set incorrectly on the client device, it will fail to communicate with external networks.</p>
+    </li>
+    <li>Default gateway device (e.g., router) is down or unreachable.
+      <p>The router or gateway device may be powered off, disconnected, or experiencing hardware/software issues.</p>
+    </li>
+    <li>Network interface issues on the client device.
+      <p>Problems with the network adapter, such as driver issues or physical damage, can prevent proper communication with the gateway.</p>
+    </li>
   </ul>
+  <h3>Simulation File:</h3>
+  <a href="simulations/default_gateway_issue.pka" download>Download Packet Tracer Simulation</a>
+  <h3>Table: Default Gateway Configuration</h3>
+  <table>
+    <tr>
+      <th>Device</th>
+      <th>Interface</th>
+      <th>IP Address</th>
+      <th>Subnet Mask</th>
+      <th>Default Gateway</th>
+    </tr>
+    <tr>
+      <td>R1</td>
+      <td>G0/0</td>
+      <td>192.168.10.1</td>
+      <td>255.255.255.0</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>R1</td>
+      <td>G0/1</td>
+      <td>192.168.11.1</td>
+      <td>255.255.255.0</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>S1</td>
+      <td>VLAN 1</td>
+      <td>192.168.10.2</td>
+      <td>255.255.255.0</td>
+      <td>blank</td>
+    </tr>
+    <tr>
+      <td>S2</td>
+      <td>VLAN 1</td>
+      <td>192.168.11.2</td>
+      <td>255.255.255.0</td>
+      <td>blank</td>
+    </tr>
+    <tr>
+      <td>PC1</td>
+      <td>NIC</td>
+      <td>192.168.10.10</td>
+      <td>255.255.255.0</td>
+      <td>blank</td>
+    </tr>
+    <tr>
+      <td>PC2</td>
+      <td>NIC</td>
+      <td>192.168.10.11</td>
+      <td>255.255.255.0</td>
+      <td>blank</td>
+    </tr>
+    <tr>
+      <td>PC3</td>
+      <td>NIC</td>
+      <td>192.168.11.10</td>
+      <td>255.255.255.0</td>
+      <td>blank</td>
+    </tr>
+    <tr>
+      <td>PC4</td>
+      <td>NIC</td>
+      <td>192.168.11.11</td>
+      <td>255.255.255.0</td>
+      <td>blank</td>
+    </tr>
+  </table>
   <h3>Solution Steps:</h3>
   <ol>
-    <li>Review and update firewall rules to allow necessary traffic.</li>
-    <li>Verify port and protocol configurations.</li>
-    <li>Restart or update the firewall software or hardware.</li>
+    <li>verify router configuration for your network <code>show running-config</code> on exec mode.</li>
+    <img src="images/default_gateway/router_config.png" alt="Router Configuration" style="width: 100%; max-width: 600px;">
+    <li>check all pc for their if configuration by their vlan and fix them</li>
+    <img src="images/default_gateway/pc_config.png" alt="PC Configuration" style="width: 100%; max-width: 600px;">
+    <li>Check switch configurations</li>
+    <img src="images/default_gateway/switch_config.png" alt="Switch Configuration" style="width: 100%; max-width: 600px;">
+    <li>in switch1 there is no default gateway and switch2 there is no ip address </li>
+    <li>Fix them by these instructions</li>
+    <pre>
+      switch1
+      <code>
+      enable
+      configure terminal
+      ip default-gateway 192.168.10.1
+      exit
+      write memory
+      </code>
+      switch2
+      <code>
+      enable
+      configure terminal
+      interface vlan 1
+      ip address 192.168.11.2 255.255.255.0
+      no shutdown
+      exit
+      exit
+      write memory
+      </code>
+    <li>Use the <code>ping</code> or <code>tracert</code> command to test connectivity after making changes.</li>
+    <img src="images/default_gateway/ping_test.png" alt="Ping Test" style="width: 100%; max-width: 600px;">
   </ol>
 </div>
 
