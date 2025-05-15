@@ -564,22 +564,176 @@ show ip dhcp snooping binding
     <img src="images/default_gateway/ping_test.png" alt="Ping Test" style="width: 100%; max-width: 600px;">
   </ol>
 </div>
-
 <div id="nat-issue" class="problem-details">
   <h2>6. NAT Configuration Issues</h2>
   <h3>Problem Definition:</h3>
-  <p>Devices on a private network cannot access the internet due to NAT misconfigurations.</p>
+  <p>
+    Network Address Translation (NAT) is a process used to map private IP addresses within a
+    local network to a public IP address for internet access. Misconfigurations in NAT can prevent
+    devices on a private network from accessing the internet or external resources. This can lead
+    to connectivity issues and disrupt network operations.
+  </p>
+
   <h3>Potential Causes:</h3>
   <ul>
-    <li>Incorrect NAT rules or settings.</li>
-    <li>Overlapping IP address ranges.</li>
-    <li>Insufficient NAT resources on the router.</li>
+    <li>
+      Incorrect NAT rules or settings.
+      <p>
+        NAT rules on the router may be misconfigured, leading to improper translation of private IP
+        addresses to public IP addresses. For example, missing or incorrect <code>ip nat inside</code>
+        or <code>ip nat outside</code> configurations can cause issues.
+      </p>
+    </li>
+    <li>
+      Overlapping IP address ranges.
+      <p>
+        If the private IP address range overlaps with another network's IP range, NAT may fail to function
+        correctly. This can occur in cases where multiple networks are merged or when VPNs are used.
+      </p>
+    </li>
+    <li>
+      Insufficient NAT resources on the router.
+      <p>
+        Routers have a limited capacity for NAT translations. If the number of devices exceeds this capacity,
+        new devices may fail to establish connections. This is often referred to as "NAT table exhaustion."
+      </p>
+    </li>
   </ul>
+
+  <h3>Simulation File:</h3>
+  <p>
+    <a href="simulations/NAT_issues.pkt" download>Download Packet Tracer Simulation "about static NAT"</a>
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Device</th>
+        <th>Interface</th>
+        <th>IP Address</th>
+        <th>Subnet Mask</th>
+        <th>Default Gateway</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>R1</td>
+        <td>G0/0</td>
+        <td>10.4.10.254</td>
+        <td>255.255.255.0</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R1</td>
+        <td>G0/1</td>
+        <td>10.4.11.254</td>
+        <td>255.255.255.0</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R1</td>
+        <td>S0/0/1</td>
+        <td>10.4.1.2</td>
+        <td>255.255.255.252</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R2</td>
+        <td>S0/0/0</td>
+        <td>209.165.76.194</td>
+        <td>255.255.255.224</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R2</td>
+        <td>S0/0/1</td>
+        <td>10.4.1.1</td>
+        <td>255.255.255.252</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>Server1</td>
+        <td>NIC</td>
+        <td>64.100.201.5</td>
+        <td>255.255.255.0</td>
+        <td>64.100.201.1</td>
+      </tr>
+      <tr>
+        <td>PC1</td>
+        <td>NIC</td>
+        <td>10.4.10.1</td>
+        <td>255.255.255.0</td>
+        <td>10.4.10.254</td>
+      </tr>
+      <tr>
+        <td>PC2</td>
+        <td>NIC</td>
+        <td>10.4.10.2</td>
+        <td>255.255.255.0</td>
+        <td>10.4.10.254</td>
+      </tr>
+      <tr>
+        <td>L1</td>
+        <td>NIC</td>
+        <td>10.4.11.1</td>
+        <td>255.255.255.0</td>
+        <td>10.4.11.254</td>
+      </tr>
+      <tr>
+        <td>L2</td>
+        <td>NIC</td>
+        <td>10.4.11.2</td>
+        <td>255.255.255.0</td>
+        <td>10.4.11.254</td>
+      </tr>
+    </tbody>
+  </table>
+
   <h3>Solution Steps:</h3>
   <ol>
-    <li>Verify and correct NAT rules on the router.</li>
-    <li>Ensure IP address ranges do not overlap.</li>
-    <li>Upgrade router resources if necessary.</li>
+    <li>
+      Check all network devices <code>ping ****.****.****.****</code> to destination.
+      <div style="text-align: center;"></div>
+      <p>As we see, only R2 could send ping. So there could be a NAT issue in the network.</p>
+    </li>
+    <li>
+      View NAT translation on R2 with <code>show ip nat translation</code>.
+      <p>If the output is empty, it indicates that no NAT translations are currently active. This could be due to:</p>
+      <ul>
+        <li>No traffic has passed through the NAT-enabled interfaces yet.</li>
+        <li>Incorrect NAT configuration, such as missing or misconfigured access lists or NAT rules.</li>
+        <li>Interfaces not properly marked as <code>ip nat inside</code> or <code>ip nat outside</code>.</li>
+        <li>Devices in the network are not generating traffic that requires NAT.</li>
+      </ul>
+    </li>
+    <li>
+      Verify and correct NAT rules on the router.
+      <p>Check the NAT configuration on the router using the following command:</p>
+      <pre><code>show running-config | include nat</code></pre>
+      <img src="images/nat_issues/swapping_issue.png" alt="NAT Configuration" style="width: 100%; max-width: 600px;">
+      <p>If interfaces are not properly marked as <code>ip nat inside</code> or <code>ip nat outside</code>, fix NAT with:</p>
+      <pre><code>
+interface s0/0/0
+ip nat outside
+interface s0/0/1
+ip nat inside
+      </code></pre>
+    </li>
+    <li>
+      Ping all network devices and show the access list with <code>show running-config</code> to check NAT configuration.
+      <img src="images/nat_issues/access_list.png" alt="NAT Configuration" style="width: 100%; max-width: 600px;">
+    </li>
+    <li>
+      Upgrade router resources if necessary.
+      <p>Info: For each VLAN, there must be an access permit to ensure proper communication and security.</p>
+      <p>If a VLAN access-list permit is not present, execute the following command:</p>
+      <pre><code>
+R2(config)# no access-list 101
+R2(config)# access-list 101 permit ip 10.4.10.0 0.0.1.255 any
+      </code></pre>
+      <p>This command allows NAT for all IPs between 10.4.10.0 and 10.4.11.255. The "any" keyword indicates that access to all destination networks is permitted.</p>
+    </li>
+    <li>Recheck all configurations and test connectivity again to ensure the issue is resolved.</li>
+    <img src="images/nat_issues/after_solution.png" alt="NAT Configuration" style="width: 100%; max-width: 600px;">
   </ol>
 </div>
 
