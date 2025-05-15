@@ -15,8 +15,8 @@
     <button onclick="toggleVisibility('dhcp-issue')">3. DHCP Server Issues</button>
     <button onclick="toggleVisibility('dhcp-spoofing')">4. DHCP Spoofing Attack: Prevention & Mitigation</button>
     <button onclick="toggleVisibility('default-gateway-issue')">5. Default Gateway Problem</button>
-    <button onclick="toggleVisibility('nat-issue')">6. NAT Configuration Issues</button>
-    <button onclick="toggleVisibility('wifi-issue')">7. Wi-Fi Connectivity Problems</button>
+    <button onclick="toggleVisibility('nat-issue')">6. NAT Configuration Problem</button>
+    <button onclick="toggleVisibility('eigrp-issue')">7.  EIGRP for IPv4 Problem</button>
     <button onclick="toggleVisibility('switch-loop')">8. Switch Loop Issues</button>
     <button onclick="toggleVisibility('mtu-issue')">9. MTU Configuration Problems</button>
     <button onclick="toggleVisibility('qos-issue')">10. QoS Configuration Issues</button>
@@ -602,7 +602,7 @@ show ip dhcp snooping binding
 
   <h3>Simulation File:</h3>
   <p>
-    <a href="simulations/NAT_issues.pkt" download>Download Packet Tracer Simulation "about static NAT"</a>
+    <a href="simulations/NAT_issues.pka" download>Download Packet Tracer Simulation "about static NAT"</a>
   </p>
   <table>
     <thead>
@@ -737,24 +737,184 @@ R2(config)# access-list 101 permit ip 10.4.10.0 0.0.1.255 any
   </ol>
 </div>
 
-<div id="wifi-issue" class="problem-details">
-  <h2>7. Wi-Fi Connectivity Problems</h2>
+<div id="eigrp-issue" class="problem-details">
+  <h2>7. EIGRP Routing Protocol Problem</h2>
   <h3>Problem Definition:</h3>
-  <p>Devices experience slow or intermittent Wi-Fi connections.</p>
+  <p>Network connectivity issues arise between routers running the EIGRP protocol,
+     leading to missing routes and neighbor adjacency failures. For instance, consider
+      a scenario where Router A and Router B are connected via a serial link, but Router
+       A cannot establish an EIGRP neighbor relationship with Router B. This could result 
+       in Router A being unable to learn routes to networks behind Router B, causing communication 
+       failures between devices in those networks.</p>
+  
   <h3>Potential Causes:</h3>
   <ul>
-    <li>Signal interference from other devices.</li>
-    <li>Incorrect Wi-Fi settings or credentials.</li>
-    <li>Overloaded access points.</li>
+    <li>Mismatched Autonomous System (AS) numbers between routers</li>
+    <li>Missing network statements in EIGRP configuration</li>
+    <li>Auto-summary causing route aggregation issues</li>
+    <li>Missing passive-interface configuration on LAN ports</li>
+    <li>ACL or firewall blocking EIGRP multicast traffic (224.0.0.10)</li>
   </ul>
+  <h3>Simulation File:</h3>
+  <p>
+    <a href="simulations/EIGRP_issues.pka" download>Download Packet Tracer Simulation</a>
+  <table>
+    <thead>
+      <tr>
+        <th>Device</th>
+        <th>Interface</th>
+        <th>IP Address</th>
+        <th>Subnet Mask</th>
+        <th>Default Gateway</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>R1</td>
+        <td>G0/0</td>
+        <td>172.31.10.1</td>
+        <td>255.255.255.0</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R1</td>
+        <td>S0/0/0</td>
+        <td>172.31.40.225</td>
+        <td>255.255.255.252</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R1</td>
+        <td>S0/0/1</td>
+        <td>172.31.40.233</td>
+        <td>255.255.255.252</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R2</td>
+        <td>G0/0</td>
+        <td>172.31.20.1</td>
+        <td>255.255.255.0</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R2</td>
+        <td>S0/0/0</td>
+        <td>172.31.40.226</td>
+        <td>255.255.255.252</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R2</td>
+        <td>S0/0/1</td>
+        <td>172.31.40.229</td>
+        <td>255.255.255.252</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R2</td>
+        <td>S0/1/0</td>
+        <td>209.165.201.1</td>
+        <td>255.255.255.224</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R3</td>
+        <td>G0/0</td>
+        <td>172.31.30.1</td>
+        <td>255.255.255.0</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R3</td>
+        <td>S0/0/0</td>
+        <td>172.31.40.234</td>
+        <td>255.255.255.252</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>R3</td>
+        <td>S0/0/1</td>
+        <td>172.31.40.230</td>
+        <td>255.255.255.252</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>PC1</td>
+        <td>NIC</td>
+        <td>172.31.10.10</td>
+        <td>255.255.255.0</td>
+        <td>172.31.10.1</td>
+      </tr>
+      <tr>
+        <td>PC2</td>
+        <td>NIC</td>
+        <td>172.31.20.10</td>
+        <td>255.255.255.0</td>
+        <td>172.31.20.1</td>
+      </tr>
+      <tr>
+        <td>PC3</td>
+        <td>NIC</td>
+        <td>172.31.30.10</td>
+        <td>255.255.255.0</td>
+        <td>172.31.30.1</td>
+      </tr>
+    </tbody>
+  </table>
   <h3>Solution Steps:</h3>
   <ol>
-    <li>Reduce interference by changing the Wi-Fi channel.</li>
-    <li>Verify Wi-Fi settings and credentials on devices.</li>
-    <li>Add more access points to distribute the load.</li>
+    <li><strong>Verify AS Number Consistency:</strong>
+      <pre>show running-config | section router eigrp</pre>
+      <p>Ensure all routers use the same AS number</p>
+      <img src="images/eigrp/as_number.png" alt="AS Number" style="width: 100%; max-width: 600px;">
+      <p>If their number inconsistent, fix it in configuration mode using:
+        <pre><code>
+      <ul>
+        <li>first copy EIGRP contents</li>
+        <li>no router eigrp [AS_NUM]</li>
+        <li>router eigrp [NEW_AS_NUM]</li>
+        <li>network [NETWORK] [WILDCARD_MASK]  ////Apply this for all list items</li>
+      </ul>
+      <img src="images/eigrp/fix_as_number.png" alt="Fix AS Number" style="width: 100%; max-width: 600px;">
+    </li>
+    
+    <li><strong>Check EIGRP Neighbors:</strong>
+      <pre>show ip eigrp neighbors</pre>
+      <h4>
+        Investigate missing adjacencies
+      </h4>
+      <img src="images/eigrp/neighbors.png" alt="EIGRP Neighbors" style="width: 100%; max-width: 600px;">
+      <p>If there is missing adjacencies then: </p>
+      <code>
+        <ul>
+          <li>enable</li>
+          <li>configure terminal</li>
+          <li>router eigrp [AS_NUM]</li>
+          <li>network [NETWORK] [WILDCARD_MASK]</li>
+          <li>no auto-summary</li>
+        </ul>
+      </code>
+    </li>
+    <li>
+      <h3>Check connectivity with ping</h3>
+      <img src="images/eigrp/ping.png" alt="EIGRP Ping" style="width: 100%; max-width: 600px;">
+    </li>
   </ol>
+  <h3>Important Notes:</h3>
+  <ul>
+    <li>Wildcard mask is the inverse of subnet mask (e.g., /24 → 0.0.0.255)</li>
+    <li>For internet connectivity, redistribute static default route:
+      <pre>
+      <ul>
+        <li>ip route 0.0.0.0 0.0.0.0 [NEXT_HOP]</li>
+        <li>router eigrp [AS_NUM]</li>
+        <li>redistribute static</li>
+      </ul>
+      </pre>
+    </li>
+  </ul>
 </div>
-
 <div id="switch-loop" class="problem-details">
   <h2>8. Switch Loop Issues</h2>
   <h3>Problem Definition:</h3>
