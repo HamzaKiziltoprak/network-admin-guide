@@ -917,18 +917,119 @@ R2(config)# access-list 101 permit ip 10.4.10.0 0.0.1.255 any
 </div>
 <div id="switch-loop" class="problem-details">
   <h2>8. Switch Loop Issues</h2>
+  
   <h3>Problem Definition:</h3>
-  <p>Network experiences broadcast storms due to switch loops.</p>
+  <p>Network experiences severe performance degradation or complete outage due to broadcast storms
+     caused by switching loops, where packets circulate endlessly between interconnected switches.</p>
+  
+  <h3>Primary Symptoms:</h3>
+  <ul>
+    <li>Network slowdown or complete unresponsiveness</li>
+    <li>Switch LEDs flashing rapidly and continuously</li>
+    <li>High CPU utilization on network devices</li>
+    <li>Flapping MAC address tables</li>
+  </ul>
+  
   <h3>Potential Causes:</h3>
   <ul>
-    <li>Redundant connections between switches without STP (Spanning Tree Protocol).</li>
-    <li>Misconfigured switch ports.</li>
+    <li><strong>Redundant physical connections</strong> between switches without proper loop prevention</li>
+    <li><strong>Disabled or misconfigured STP</strong> (Spanning Tree Protocol)</li>
+    <li><strong>Multiple active paths</strong> between network segments</li>
+    <li><strong>Incorrect cabling</strong> creating unintended loops</li>
   </ul>
+  <h3>Simulation File:</h3>
+  <p>
+    <a href="simulations/Switch_Loop_Issue.pkt" download>Download Packet Tracer Simulation</a>
+  </p>
   <h3>Solution Steps:</h3>
   <ol>
-    <li>Enable STP on all switches.</li>
-    <li>Remove redundant connections or configure them properly.</li>
-  </ol>
+    <li>
+      <p>ping in network and use <code>show spanning-tree</code> in switch exec mode </p>
+    <img src="images/switch_loop/ping.png" alt="Switch Loop Ping" style="width: 100%; max-width: 600px;">
+    <img src="images/switch_loop/ping1.png" alt="Switch Loop Ping" style="width: 100%; max-width: 600px;">
+    <li>
+      <strong>Enable STP on All Switches</strong>
+      <p>Run the following commands on each switch to ensure STP is active on VLAN 1:</p>
+      <pre><code>
+  Switch> enable
+  Switch# configure terminal
+  Switch(config)# spanning-tree vlan 1
+      </code></pre>
+      <div class="note">
+      <strong>Explanation:</strong> This command enables Spanning Tree Protocol (STP) on VLAN 1. STP detects loops and automatically blocks redundant paths to prevent broadcast storms.
+      </div>
+    </li>
+    <li>
+      <strong>Verify STP Status</strong>
+      <p>Check the STP status on each switch:</p>
+      <pre><code>
+  Switch# show spanning-tree
+      </code></pre>
+      <p>
+      <strong>What to look for:</strong>
+      <ul>
+        <li>Which switch is the Root Bridge</li>
+        <li>Port roles: Root Port (RP), Designated Port (DP), Blocking</li>
+      </ul>
+      </p>
+      <div class="example">
+      <strong>Example Output:</strong>
+      <pre>
+  Interface        Role  State
+  Fa0/1            Desg  Forwarding
+  Fa0/2            Root  Forwarding
+  Fa0/3            Altn  Blocking
+      </pre>
+      <p>✅ Blocking port detected = STP is working and breaking the loop.</p>
+      </div>
+    </li>
+    <li>
+      <strong>Wait for Convergence</strong>
+      <p>STP takes about 30-50 seconds to converge. One switch becomes the Root Bridge, all switches calculate the shortest path to the root, and redundant links are blocked.</p>
+    </li>
+    <li>
+      <strong>Perform a Ping Test</strong>
+      <p>On a PC (e.g., PC1), run:</p>
+      <pre><code>
+  ping 192.168.1.20
+      </code></pre>
+      <p>
+        <img src="images/switch_loop/after_recovery.png" alt="Ping Test" style="width: 100%; max-width: 600px;">
+      </p>
+      <p>
+      <strong>Expected Result:</strong> Successful pings, no broadcast storm, and smooth network response.
+      </p>
+    </li>
+    <li>
+      <strong>Check MAC Address Table Stability</strong>
+      <p>On each switch, run:</p>
+      <pre><code>
+  Switch# show mac address-table
+      </code></pre>
+      <p>
+      <strong>Explanation:</strong> If MAC addresses are stable and not constantly changing, STP has eliminated the loop.
+      </p>
+    </li>
+    <li>
+      <strong>(Optional) Manually Set the Root Bridge</strong>
+      <p>To force a specific switch to become the Root Bridge:</p>
+      <pre><code>
+  Switch(config)# spanning-tree vlan 1 priority 4096
+      </code></pre>
+      <p>
+      <strong>Note:</strong> Default STP priority is 32769. Lower values increase the chance to become Root Bridge.
+      </p>
+    </li>
+    <li>
+      <strong>(Optional) Use Rapid STP for Faster Recovery</strong>
+      <pre><code>
+  Switch(config)# spanning-tree mode rapid-pvst
+      </code></pre>
+      <p>
+      <strong>Explanation:</strong> Rapid PVST+ provides faster convergence than standard STP, reducing downtime in real networks.
+      </p>
+    </li>
+  </li>
 </div>
 
 <div id="mtu-issue" class="problem-details">
@@ -946,7 +1047,6 @@ R2(config)# access-list 101 permit ip 10.4.10.0 0.0.1.255 any
     <li>Enable packet fragmentation if necessary.</li>
   </ol>
 </div>
-
 <div id="qos-issue" class="problem-details">
   <h2>10. QoS Configuration Issues</h2>
   <h3>Problem Definition:</h3>
