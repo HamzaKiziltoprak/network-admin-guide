@@ -18,11 +18,11 @@
     <button onclick="toggleVisibility('nat-issue')">6. NAT Configuration Problem</button>
     <button onclick="toggleVisibility('eigrp-issue')">7.  EIGRP for IPv4 Problem</button>
     <button onclick="toggleVisibility('switch-loop')">8. Switch Loop Issues</button>
-    <button onclick="toggleVisibility('mtu-issue')">9. MTU Configuration Problems</button>
+    <button onclick="toggleVisibility('gre-issue')">9.GRE Tunnel Issue</button>
     <button onclick="toggleVisibility('qos-issue')">10. QoS Configuration Issues</button>
   </div>
 
-<div id="ip-conflict" class="problem-details">
+<div id="ip-conflict" class="problem-details"  style="border:1px solid #333; padding:15px; font-family:Arial, sans-serif; background:#f9f9f9; margin:20px auto; border-radius:8px;">
     <h2>1. IP Address Conflict (Network Layer - Layer 3)</h2>
 
     <h3>Problem Definition:</h3>
@@ -131,7 +131,7 @@
       <li>Document IP usage and consider using IP address management tools.</li>
     </ol>
   </div>
-<div id="Inter_vlan_communication_problem">
+<div id="Inter_vlan_communication_problem"  style="border:1px solid #333; padding:15px; font-family:Arial, sans-serif; background:#f9f9f9; margin:20px auto; border-radius:8px;">
   <h2>2. Inter-Vlan Routing Issue</h2>
   <h3>Problem Definition:</h3>
   <p>
@@ -189,7 +189,7 @@
     <img src="images/inter_vlan_routing/verify_after_solution.png" alt="Inter VLAN communication problem" style="width: 50%;">
   </ol>
 </div>
-<div id="dhcp-issue" class="problem-details">
+<div id="dhcp-issue" class="problem-details"  style="border:1px solid #333; padding:15px; font-family:Arial, sans-serif; background:#f9f9f9; margin:20px auto; border-radius:8px;">
   <h2>3. DHCP Server Issues</h2>
   <h3>Problem Definition:</h3>
   <p>Devices fail to obtain IP addresses automatically due to DHCP server 
@@ -267,7 +267,7 @@ Router(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.189
 </ol>
 
 </div>
-<div id="dhcp-spoofing" class="problem-details">
+<div id="dhcp-spoofing" class="problem-details"  style="border:1px solid #333; padding:15px; font-family:Arial, sans-serif; background:#f9f9f9; margin:20px auto; border-radius:8px;">
   <h2>4. DHCP Spoofing Attack: Prevention & Mitigation</h2>
   
   <h3>Problem Definition:</h3>
@@ -444,7 +444,7 @@ show ip dhcp snooping binding
     <strong>Remember:</strong> Attack = Spoofing | Defense = Snooping
   </div>
 </div>
-<div id="default-gateway-issue" class="problem-details">
+<div id="default-gateway-issue" class="problem-details"  style="border:1px solid #333; padding:15px; font-family:Arial, sans-serif; background:#f9f9f9; margin:20px auto; border-radius:8px;">
   <h2>5. Default Gateway Issue</h2>
   <h3>Problem Definition:</h3>
   <p>The default gateway is a critical network component that acts as an access point or IP router for devices
@@ -564,7 +564,7 @@ show ip dhcp snooping binding
     <img src="images/default_gateway/ping_test.png" alt="Ping Test" style="width: 100%; max-width: 600px;">
   </ol>
 </div>
-<div id="nat-issue" class="problem-details">
+<div id="nat-issue" class="problem-details"  style="border:1px solid #333; padding:15px; font-family:Arial, sans-serif; background:#f9f9f9; margin:20px auto; border-radius:8px;">
   <h2>6. NAT Configuration Issues</h2>
   <h3>Problem Definition:</h3>
   <p>
@@ -736,8 +736,7 @@ R2(config)# access-list 101 permit ip 10.4.10.0 0.0.1.255 any
     <img src="images/nat_issues/after_solution.png" alt="NAT Configuration" style="width: 100%; max-width: 600px;">
   </ol>
 </div>
-
-<div id="eigrp-issue" class="problem-details">
+<div id="eigrp-issue" class="problem-details" style="border:1px solid #333; padding:15px; font-family:Arial, sans-serif; background:#f9f9f9; margin:20px auto; border-radius:8px;">
   <h2>7. EIGRP Routing Protocol Problem</h2>
   <h3>Problem Definition:</h3>
   <p>Network connectivity issues arise between routers running the EIGRP protocol,
@@ -915,7 +914,7 @@ R2(config)# access-list 101 permit ip 10.4.10.0 0.0.1.255 any
     </li>
   </ul>
 </div>
-<div id="switch-loop" class="problem-details">
+<div id="switch-loop" class="problem-details" style="border:1px solid #333; padding:15px; font-family:Arial, sans-serif; background:#f9f9f9; margin:20px auto; border-radius:8px;">
   <h2>8. Switch Loop Issues</h2>
   
   <h3>Problem Definition:</h3>
@@ -1031,22 +1030,187 @@ R2(config)# access-list 101 permit ip 10.4.10.0 0.0.1.255 any
     </li>
   </li>
 </div>
-
-<div id="mtu-issue" class="problem-details">
-  <h2>9. MTU Configuration Problems</h2>
+<div id="gre-issue" class="problem-details" style="border:1px solid #333; padding:15px; font-family:Arial, sans-serif; background:#f9f9f9; margin:20px auto; border-radius:8px;">
+  <h2>GRE Tunnel Issue</h2>
+  
   <h3>Problem Definition:</h3>
-  <p>Large packets are dropped due to incorrect MTU settings.</p>
+  <p>
+    GRE (Generic Routing Encapsulation) tunnels are used to connect remote networks over an IP backbone. Misconfiguration of GRE tunnels can result in loss of connectivity between sites, routing failures, or tunnel interface issues.
+  </p>
+
   <h3>Potential Causes:</h3>
   <ul>
-    <li>MTU size mismatch between devices.</li>
-    <li>Fragmentation issues.</li>
+    <li>Incorrect tunnel source or destination IP addresses</li>
+    <li>Wrong IP addressing on tunnel interfaces</li>
+    <li>Static routes not pointing to the tunnel interface</li>
+    <li>Physical interfaces down or misconfigured</li>
   </ul>
+
+  <h3>Simulation File:</h3>
+  <p>
+    <a href="simulations/gre_tunnel_issue.pka" download>Download Packet Tracer Simulation</a>
+  </p>
+  <h3>Table: GRE Tunnel Configuration</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Device</th>
+        <th>Interface</th>
+        <th>IP Address</th>
+        <th>Subnet Mask</th>
+        <th>Default Gateway</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>RA</td>
+        <td>G0/0</td>
+        <td>192.168.1.1</td>
+        <td>255.255.255.0</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>RA</td>
+        <td>S0/0/0</td>
+        <td>64.103.211.2</td>
+        <td>255.255.255.252</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>RA</td>
+        <td>Tunnel 0</td>
+        <td>10.10.10.1</td>
+        <td>255.255.255.252</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>RB</td>
+        <td>G0/0</td>
+        <td>192.168.2.1</td>
+        <td>255.255.255.0</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>RB</td>
+        <td>S0/0/0</td>
+        <td>209.165.122.2</td>
+        <td>255.255.255.252</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>RB</td>
+        <td>Tunnel 0</td>
+        <td>10.10.10.2</td>
+        <td>255.255.255.252</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>PC-A</td>
+        <td>NIC</td>
+        <td>192.168.1.2</td>
+        <td>255.255.255.0</td>
+        <td>192.168.1.1</td>
+      </tr>
+      <tr>
+        <td>PC-C</td>
+        <td>NIC</td>
+        <td>192.168.2.2</td>
+        <td>255.255.255.0</td>
+        <td>192.168.2.1</td>
+      </tr>
+    </tbody>
+  </table>
+
   <h3>Solution Steps:</h3>
   <ol>
-    <li>Set the MTU size to match across all devices.</li>
-    <li>Enable packet fragmentation if necessary.</li>
+    <li>
+      <p>Test tunnel connectivity with <code>ping</code> from one tunnel endpoint to the other (e.g., <code>ping [remote tunnel IP]</code>).</p>
+      <img src="images/gre_issue/ping_test.png" alt="Ping Test" style="width: 100%; max-width: 600px;">
+    </li>
+    <li>
+      <strong>Verify physical connectivity and interface status on both routers using <code>show ip interface brief</code>.</strong>
+      <ul>
+      <li>
+        On end devices, use <code>show ip interface brief</code> to see tunnel configurations<br>
+        <img src="images/gre_issue/shw_A.png" alt="Show IP Interface" style="width: 100%; max-width: 600px;"><br>
+        <img src="images/gre_issue/shw_B.png" alt="Show IP Interface" style="width: 100%; max-width: 600px;">
+      </li>
+      </ul>
+    </li>
+    <li>
+      <strong>If There Are Mistakes in Configuration, Configure GRE Tunnel Interfaces</strong>
+      <ul>
+        <li>
+          <strong>Step 1: Configure Tunnel 0 on RA.</strong>
+          <pre>
+    RA(config)# interface tunnel 0
+    RA(config-if)# ip address 192.168.1.1 255.255.255.252
+    RA(config-if)# tunnel source s0/0/0
+    RA(config-if)# tunnel destination 209.165.122.2
+    RA(config-if)# tunnel mode gre ip
+    RA(config-if)# no shutdown
+          </pre>
+        </li>
+        <li>
+          <strong>Step 2: Configure Tunnel 0 on RB.</strong>
+          <pre>
+    RB(config)# interface tunnel 0
+    RB(config-if)# ip address 10.10.10.2 255.255.255.252
+    RB(config-if)# tunnel source s0/0/0
+    RB(config-if)# tunnel destination 64.103.211.2
+    RB(config-if)# tunnel mode gre ip
+    RB(config-if)# no shutdown
+          </pre>
+        </li>
+      </ul>
+        </li>
+    <li>
+      <strong>Configure Static Routes for Private IP Traffic</strong>
+      <ul>
+      <li>
+        <strong>Step 3: Configure a static route for private IP traffic.(ip route [network address] [tunnel interface address(global)])</strong>
+        <pre>
+  RA(config)# ip route 172.31.1.0 255.255.255.0 64.103.211.2
+  RB(config)# ip route 192.168.1.0 255.255.255.0 10.10.10.1
+        </pre>
+      </li>
+      </ul>
+    </li>
+    <li>
+      <strong>Check tunnel configuration with <code>show running-config</code> and <code>show interfaces tunnel X</code>.</strong>
+    </li>
+    <li>
+      <strong>Correct tunnel source and destination IP addresses to match the physical interface IPs.</strong>
+    </li>
+    <li>
+      <strong>Assign correct IP addresses to tunnel interfaces.</strong>
+    </li>
+    <li>
+      <p><strong>Update static routes to use the tunnel interface as the next hop.</strong></p>
+      <img src="images/gre_issue/static_tunnel.png" alt="Static Route" style="width: 100%; max-width: 600px;">
+    </li>
+    <li>
+      <strong>Ensure all interfaces are enabled with <code>no shutdown</code>.</strong>
+    </li>
+    <li>
+      <strong>Test connectivity with <code>ping</code> between remote networks.</strong>
+      <ul>
+      <li>
+        <strong>Step 1: Ping PCA from PCB.</strong><br>
+        <p>
+        After configuration, ping PCA from PCB. The ping should now succeed.
+        </p>
+        <img src="images/gre_issue/chek_last_ping.png" alt="Ping Test" style="width: 100%; max-width: 600px;">
+      </li>
+      <li>
+        <strong>Step 2: Trace the path from PCA to PCB.</strong><br>
+        Use <code>tracert</code> or <code>traceroute</code> to verify the path. You should not see public IPs in the output, confirming GRE encapsulation.
+      </li>
+      </ul>
+    </li>
   </ol>
 </div>
+
 <div id="qos-issue" class="problem-details">
   <h2>10. QoS Configuration Issues</h2>
   <h3>Problem Definition:</h3>
