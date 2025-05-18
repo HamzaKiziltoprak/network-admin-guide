@@ -11,8 +11,6 @@
 
 <header>Network Admin Guide</header>
 <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-
-
 <div class="container">
   <div class="sidebar" id="sidebar">
     <button onclick="toggleVisibility('ip-conflict')">1. IP Address Conflict</button>
@@ -24,7 +22,7 @@
     <button onclick="toggleVisibility('eigrp-issue')">7.  EIGRP for IPv4 Problem</button>
     <button onclick="toggleVisibility('switch-loop')">8. Switch Loop Issues</button>
     <button onclick="toggleVisibility('gre-issue')">9.GRE Tunnel Issue</button>
-    <button onclick="toggleVisibility('qos-issue')">10. QoS Configuration Issues</button>
+    <button onclick="toggleVisibility('etherChannel-issue')">10. EtherChannel Issue</button>
   </div>
 
   <div class="content">
@@ -1198,20 +1196,275 @@ Fa0/3            Altn  Blocking</pre>
         </li>
       </ol>
     </div>
-    <div id="qos-issue" class="problem-details" >
-      <h2>10. QoS Configuration Issues</h2>
+    <div id="etherChannel-issue" class="problem-details" >
+      <h2>10. EtherChannel Issue</h2>
       <h3>Problem Definition:</h3>
-      <p>Critical traffic experiences delays due to lack of QoS policies.</p>
+      <p>EtherChannel is a technology that allows multiple physical links
+         to be bundled into a single logical link for increased bandwidth and redundancy.
+          Misconfiguration of EtherChannel can lead to network performance issues, 
+          including packet loss, slow connectivity, or complete link failure.</p>
       <h3>Potential Causes:</h3>
       <ul>
-        <li>No QoS policies configured.</li>
-        <li>Incorrect prioritization of traffic.</li>
+        <li>Inconsistent configurations on bundled interfaces</li>
+        <li>Incorrect EtherChannel mode (e.g., active, passive, on)</li>
+        <li>Physical link issues or mismatched speed/duplex settings</li>
+        <li>VLAN mismatch on bundled interfaces</li>
+        <li>STP misconfiguration causing blocking of EtherChannel</li>
       </ul>
+
+      <h3>Simulation File:</h3>
+      <p>
+        <a href="simulations/etherchannel_issue.pka" download>Download Packet Tracer Simulation</a>
+      </p>
+      <h3>Port Channel Table</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Channel Group</th>
+            <th>Ports</th>
+            <th>Protocol</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>
+              S1: G0/1, G0/2<br>
+              S2: G0/1, G0/2
+            </td>
+            <td>LACP active</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>
+              S2: G0/1, G0/2<br>
+              S4: G0/1, G0/2
+            </td>
+            <td>LACP active</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>
+              S1: F0/23, F0/24<br>
+              S2: F0/23, F0/24
+            </td>
+            <td>LACP active</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>
+              S3: F0/23, F0/24<br>
+              S4: F0/23, F0/24
+            </td>
+            <td>LACP active</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>
+              S1: F0/21, F0/22<br>
+              S4: F0/21, F0/22
+            </td>
+            <td>LACP active</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>
+              S2: F0/21, F0/22<br>
+              S3: F0/21, F0/22
+            </td>
+            <td>LACP active</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Device Table</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Device</th>
+            <th>Group</th>
+            <th>Ports</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>S1</td>
+            <td>1</td>
+            <td>G0/1, G0/2</td>
+          </tr>
+          <tr>
+            <td>S1</td>
+            <td>3</td>
+            <td>F0/23, F0/24</td>
+          </tr>
+          <tr>
+            <td>S1</td>
+            <td>5</td>
+            <td>F0/21, F0/22</td>
+          </tr>
+          <tr>
+            <td>S2</td>
+            <td>2</td>
+            <td>G0/1, G0/2</td>
+          </tr>
+          <tr>
+            <td>S2</td>
+            <td>3</td>
+            <td>F0/23, F0/24</td>
+          </tr>
+          <tr>
+            <td>S2</td>
+            <td>6</td>
+            <td>F0/21, F0/22</td>
+          </tr>
+          <tr>
+            <td>S3</td>
+            <td>1</td>
+            <td>G0/1, G0/2</td>
+          </tr>
+          <tr>
+            <td>S3</td>
+            <td>4</td>
+            <td>F0/23, F0/24</td>
+          </tr>
+          <tr>
+            <td>S3</td>
+            <td>6</td>
+            <td>F0/21, F0/22</td>
+          </tr>
+          <tr>
+            <td>S4</td>
+            <td>2</td>
+            <td>G0/1, G0/2</td>
+          </tr>
+          <tr>
+            <td>S4</td>
+            <td>4</td>
+            <td>F0/23, F0/24</td>
+          </tr>
+          <tr>
+            <td>S4</td>
+            <td>5</td>
+            <td>F0/21, F0/22</td>
+          </tr>
+        </tbody>
+      </table>
       <h3>Solution Steps:</h3>
       <ol>
-        <li>Implement QoS policies to prioritize critical traffic.</li>
-        <li>Verify and adjust traffic prioritization settings.</li>
+        <li>
+          <strong>Verify EtherChannel Status:</strong>
+          <ul>
+            <li>Use <code>show etherchannel summary</code> in exec mode on all switches to check the status of each port channel.</li>
+            <li>Look for port channels that are <strong>down</strong> or have mismatched protocols (e.g., LACP vs. PAgP).</li>
+            <li><strong>LACP (Link Aggregation Control Protocol)</strong> is an IEEE standard protocol
+               (802.3ad) used to automatically bundle multiple physical links into a single logical
+                channel for redundancy and increased bandwidth.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Ensure Consistent Protocols:</strong>
+          <ul>
+            <li>
+              <strong>Port Channel 1:</strong> One of the switches is not using LACP.<br>
+              <img src="images/etherchannel/issue_pc1.png" alt="EtherChannel Summary" style="width: 100%; max-width: 600px;">
+            </li>
+            <li>
+              <strong>Port Channel 2:</strong> No problem.<br>
+              <img src="images/etherchannel/issue_pc2.png" alt="EtherChannel Summary" style="width: 100%; max-width: 600px;">
+            </li>
+            <li>
+              <strong>Port Channel 3:</strong> No problem.<br>
+              <img src="images/etherchannel/issue_pc3.png" alt="EtherChannel Summary" style="width: 100%; max-width: 600px;">
+            </li>
+            <li>
+              <strong>Port Channel 4:</strong> One of the switches is not using LACP.<br>
+              <img src="images/etherchannel/issue_pc4.png" alt="EtherChannel Summary" style="width: 100%; max-width: 600px;">
+            </li>
+            <li>
+              <strong>Port Channel 5:</strong> One switch has not defined the port channel.<br>
+              <img src="images/etherchannel/issue_pc5.png" alt="EtherChannel Summary" style="width: 100%; max-width: 600px;">
+            </li>
+            <li>
+              <strong>Port Channel 6:</strong> One of the switches is not using LACP.<br>
+              <img src="images/etherchannel/issue_pc6.png" alt="EtherChannel Summary" style="width: 100%; max-width: 600px;">
+            </li>
+          </ul>
+          <ul>
+            <li>All EtherChannels in this scenario should use <strong>LACP active</strong> mode on both ends.</li>
+            <li>If a port channel is using PAgP or another mode, remove and reconfigure it with LACP active.</li>
+            <li>
+              <pre><code>
+      no interface port-channel X
+      interface range [interfaces]
+      channel-group X mode active
+      no shutdown
+      interface port-channel X
+      switchport mode trunk
+              </code></pre>
+            </li>
+            <li>If a port channel is not defined, configure it using the appropriate channel-group commands on both switches.</li>
+            <li>
+              <pre><code>
+      interface range [interfaces]
+      channel-group X mode active
+      no shutdown
+      interface port-channel X
+      switchport mode trunk
+              </code></pre>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Check and Correct Port Assignments:</strong>
+          <ul>
+            <li>Ensure only the correct interfaces are assigned to each port channel as per the topology chart.</li>
+            <li>Remove any extra interfaces from the group if present.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Set Trunking Mode:</strong>
+          <ul>
+            <li>All port channels and their member interfaces should be set to <code>switchport mode trunk</code>.</li>
+            <li>Check with <code>show run</code> and correct any that are in access mode.</li>
+            <img src="images/etherchannel/issue_trunk.png" alt="EtherChannel Trunk" style="width: 100%; max-width: 600px;">
+            <li>Use the following commands to set trunking mode:</li>
+            <li>
+              <pre><code>
+      interface port-channel X
+      switchport mode trunk
+              </code></pre>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Enable Interfaces:</strong>
+          <ul>
+            <li>After removing/re-adding interfaces, use <code>no shutdown</code> to bring them up.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Verify Operation:</strong>
+          <ul>
+            <li>Use <code>show etherchannel summary</code> to confirm all port channels are <strong>up</strong> and using <strong>LACP</strong>.</li>
+            <li>Look for <code>SU</code> (Layer 2, up) and <code>P</code> (port is bundled) in the output.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Check for Redundancy and Loops:</strong>
+          <ul>
+            <li>STP should block redundant links to prevent loops. Use <code>show spanning-tree</code> to verify.</li>
+          </ul>
+        </li>
       </ol>
+      <h3>Verification:</h3>
+      <ul>
+        <li><code>show etherchannel summary</code> – Check status and protocol</li>
+        <li><code>show run</code> – Confirm trunking mode</li>
+        <li><code>show interfaces status</code> – Ensure interfaces are up</li>
+      </ul>
+      <div class="note">
+        <strong>Note:</strong> All EtherChannels must use the same protocol and mode on both ends. Always verify trunking and interface status after changes.
+      </div>
     </div>
   </div>
 </div>

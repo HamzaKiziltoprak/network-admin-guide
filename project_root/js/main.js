@@ -15,7 +15,7 @@ function toggleVisibility(id) {
     'eigrp-issue',
     'switch-loop',
     'gre-issue',
-    'qos-issue'
+    'etherChannel-issue'
   ];
 
   allSections.forEach(sectionId => {
