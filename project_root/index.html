@@ -3,30 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>  Final Design Project-Network Admin Guide</title>
+  <title>Network Admin Guide - Networking Troubleshooting</title>
   <link rel="stylesheet" href="css/style.css">
-  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-<header>Network Admin Guide</header>
-<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+<header>
+  <i class="fas fa-network-wired"></i> Network Admin Guide
+</header>
+<button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 <div class="container">
   <div class="sidebar" id="sidebar">
-    <button onclick="toggleVisibility('ip-conflict')">1. IP Address Conflict</button>
-    <button onclick="toggleVisibility('Inter_vlan_communication_problem')">2. Inter Vlan Communication Problem</button>
-    <button onclick="toggleVisibility('dhcp-issue')">3. DHCP Server Issues</button>
-    <button onclick="toggleVisibility('dhcp-spoofing')">4. DHCP Spoofing Attack: Prevention & Mitigation</button>
-    <button onclick="toggleVisibility('default-gateway-issue')">5. Default Gateway Problem</button>
-    <button onclick="toggleVisibility('nat-issue')">6. NAT Configuration Problem</button>
-    <button onclick="toggleVisibility('eigrp-issue')">7.  EIGRP for IPv4 Problem</button>
-    <button onclick="toggleVisibility('switch-loop')">8. Switch Loop Issues</button>
-    <button onclick="toggleVisibility('gre-issue')">9.GRE Tunnel Issue</button>
-    <button onclick="toggleVisibility('etherChannel-issue')">10. EtherChannel Issue</button>
-  </div>
+    <button onclick="toggleVisibility('ip-conflict')" id="ip-conflict-btn">
+      <i class="fas fa-exclamation-triangle"></i> 1. IP Address Conflict
+    </button>
+    <button onclick="toggleVisibility('Inter_vlan_communication_problem')" id="Inter_vlan_communication_problem-btn">
+      <i class="fas fa-exchange-alt"></i> 2. Inter Vlan Communication 
+    </button>
+    <button onclick="toggleVisibility('dhcp-issue')" id="dhcp-issue-btn">
+      <i class="fas fa-server"></i> 3. DHCP Server Issues
+    </button>
+    <button onclick="toggleVisibility('dhcp-spoofing')" id="dhcp-spoofing-btn">
+      <i class="fas fa-shield-alt"></i> 4. DHCP Spoofing Attack
+    </button>
+    <button onclick="toggleVisibility('default-gateway-issue')" id="default-gateway-issue-btn">
+      <i class="fas fa-route"></i> 5. Default Gateway Problem
+    </button>
+    <button onclick="toggleVisibility('nat-issue')" id="nat-issue-btn">
+      <i class="fas fa-random"></i> 6. NAT Configuration Problem
+    </button>
+    <button onclick="toggleVisibility('eigrp-issue')" id="eigrp-issue-btn">
+      <i class="fas fa-project-diagram"></i> 7. EIGRP for IPv4 Problem
+    </button>
+    <button onclick="toggleVisibility('switch-loop')" id="switch-loop-btn">
+      <i class="fas fa-sync"></i> 8. Switch Loop Issues
+    </button>
+    <button onclick="toggleVisibility('gre-issue')" id="gre-issue-btn">
+      <i class="fas fa-tunnel"></i> 9. GRE Tunnel Issue
+    </button>
+    <button onclick="toggleVisibility('etherChannel-issue')" id="etherChannel-issue-btn">
+      <i class="fas fa-link"></i> 10. EtherChannel Issue
+    </button>  </div>
 
   <div class="content">
-    
+    <script src="js/main.js"></script>
     <div id="ip-conflict" class="problem-details"  >
         <h2>1. IP Address Conflict (Network Layer - Layer 3)</h2>
 
@@ -88,19 +109,17 @@
             <td>255.255.255.0</td>
             <td>—</td>
         </tr>
-        </table>
-
-        <h3>Verifying Connectivity with Ping</h3>
-        <div style="display: flex; flex-wrap: wrap; justify-content: space-around; margin-top: 10px;">
-        <div style="flex: 0 0 48%; max-width: 48%;">
-        <img src="images/ipconf/ip_conflict_1.png" alt="IP Conflict Simulation" style="width: 100%;">
-        </div>
-        <div style="flex: 0 0 48%; max-width: 48%;">
-        <img src="images/ipconf/ip_conflict_2.png" alt="IP Conflict Simulation" style="width: 100%;">
-        </div>
-        <div style="flex: 0 0 100%; max-width: 100%; margin-top: 20px;">
-        <img src="images/ipconf/ip_conflict_3.png" alt="IP Conflict Simulation" style="width: 100%; max-width: 600px; display: block; margin: 0 auto;">
-        </div>
+        </table>        <h3>Verifying Connectivity with Ping</h3>
+        <div class="image-grid">
+          <div class="image-grid-item">
+            <img src="images/ipconf/ip_conflict_1.png" alt="IP Conflict Simulation">
+          </div>
+          <div class="image-grid-item">
+            <img src="images/ipconf/ip_conflict_2.png" alt="IP Conflict Simulation">
+          </div>
+          <div class="image-grid-full">
+            <img src="images/ipconf/ip_conflict_3.png" alt="IP Conflict Simulation">
+          </div>
         </div>
 
         <h3>Solution Steps:</h3>

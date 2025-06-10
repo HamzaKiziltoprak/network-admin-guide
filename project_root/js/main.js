@@ -3,7 +3,6 @@ function toggleSidebar() {
   sidebar.classList.toggle('hidden');
 }
 
-
 function toggleVisibility(id) {
   const allSections = [
     'ip-conflict',
@@ -18,6 +17,17 @@ function toggleVisibility(id) {
     'etherChannel-issue'
   ];
 
+  // Tüm butonlardan active sınıfını kaldır
+  document.querySelectorAll('.sidebar button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  // Seçilen butona active sınıfını ekle
+  const activeButton = document.getElementById(id + '-btn');
+  if (activeButton) {
+    activeButton.classList.add('active');
+  }
+
   allSections.forEach(sectionId => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -28,3 +38,8 @@ function toggleVisibility(id) {
     }
   });
 }
+
+// Sayfa yüklendiğinde ilk maddeyi göster
+document.addEventListener('DOMContentLoaded', function() {
+  toggleVisibility('ip-conflict');
+});
