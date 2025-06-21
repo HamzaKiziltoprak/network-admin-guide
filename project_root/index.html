@@ -6,6 +6,7 @@
   <title>Network Admin Guide - Networking Troubleshooting</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body>
 
@@ -16,40 +17,53 @@
 <div class="container">
   <div class="sidebar" id="sidebar">
     <button onclick="toggleVisibility('ip-conflict')" id="ip-conflict-btn">
-      <i class="fas fa-exclamation-triangle"></i> 1. IP Address Conflict
+      <i class="fas fa-exclamation-triangle"></i> 1. IP Address Conflict  <span class="layer-badge">L3</span>
     </button>
     <button onclick="toggleVisibility('Inter_vlan_communication_problem')" id="Inter_vlan_communication_problem-btn">
-      <i class="fas fa-exchange-alt"></i> 2. Inter Vlan Communication 
+      <i class="fas fa-exchange-alt"></i> 2. Inter Vlan Communication  <span class="layer-badge">L3</span>
     </button>
     <button onclick="toggleVisibility('dhcp-issue')" id="dhcp-issue-btn">
-      <i class="fas fa-server"></i> 3. DHCP Server Issues
+      <i class="fas fa-server"></i> 3. DHCP Server Issues <span class="layer-badge">L3</span>
     </button>
     <button onclick="toggleVisibility('dhcp-spoofing')" id="dhcp-spoofing-btn">
-      <i class="fas fa-shield-alt"></i> 4. DHCP Spoofing Attack
+      <i class="fas fa-shield-alt"></i> 4. DHCP Spoofing Attack <span class="layer-badge">L2-L3</span>
     </button>
     <button onclick="toggleVisibility('default-gateway-issue')" id="default-gateway-issue-btn">
-      <i class="fas fa-route"></i> 5. Default Gateway Problem
+      <i class="fas fa-route"></i> 5. Default Gateway Problem <span class="layer-badge">L3</span>
     </button>
     <button onclick="toggleVisibility('nat-issue')" id="nat-issue-btn">
-      <i class="fas fa-random"></i> 6. NAT Configuration Problem
+      <i class="fas fa-random"></i> 6. NAT Configuration Problem  <span class="layer-badge">L3</span>
     </button>
     <button onclick="toggleVisibility('eigrp-issue')" id="eigrp-issue-btn">
-      <i class="fas fa-project-diagram"></i> 7. EIGRP for IPv4 Problem
+      <i class="fas fa-project-diagram"></i> 7. EIGRP for IPv4 Problem <span class="layer-badge">L3</span>
     </button>
     <button onclick="toggleVisibility('switch-loop')" id="switch-loop-btn">
-      <i class="fas fa-sync"></i> 8. Switch Loop Issues
+      <i class="fas fa-sync"></i> 8. Switch Loop Issues <span class="layer-badge">L2</span>
     </button>
     <button onclick="toggleVisibility('gre-issue')" id="gre-issue-btn">
-      <i class="fas fa-tunnel"></i> 9. GRE Tunnel Issue
+      <i class="fas fa-tunnel"></i> 9. GRE Tunnel Issue <span class="layer-badge">L3</span>
     </button>
     <button onclick="toggleVisibility('etherChannel-issue')" id="etherChannel-issue-btn">
-      <i class="fas fa-link"></i> 10. EtherChannel Issue
+      <i class="fas fa-link"></i> 10. EtherChannel Issue  <span class="layer-badge">L2</span>
     </button>  </div>
 
   <div class="content">
-    <script src="js/main.js"></script>
-    <div id="ip-conflict" class="problem-details"  >
-        <h2>1. IP Address Conflict (Network Layer - Layer 3)</h2>
+    <script src="js/main.js"></script>    <div id="ip-conflict" class="problem-details">
+        <h2>1. IP Address Conflict (Network Layer - Layer 3)</h2>        <!-- Dashboard summary -->
+        <div class="dashboard-cards">
+          <div class="dashboard-card">
+            <h4>Difficulty Level</h4>
+            <p>Medium</p>
+          </div>
+          <div class="dashboard-card">
+            <h4>Related Layers</h4>
+            <p>Network Layer (L3)</p>
+          </div>
+          <div class="dashboard-card">
+            <h4>Related Protocols</h4>
+            <p>IP, ARP, DHCP</p>
+          </div>
+        </div>
 
         <h3>Problem Definition:</h3>
         <p>
@@ -58,538 +72,914 @@
         </p>
 
         <h3>Potential Causes:</h3>
-        <ul>
-          <li>Manual static IP assignment errors by administrators.
+        <ul class="animate-in">
+          <li class="tooltip">Manual static IP assignment errors by administrators.
+            <div class="tooltip-text">When administrators manually configure IPs without proper documentation</div>
             <p>When administrators manually assign static IP addresses, they may accidentally assign the same IP to multiple devices, leading to conflicts.</p>
           </li>
-          <li>Improper or overlapping DHCP address pool settings.
+          <li class="tooltip">Improper or overlapping DHCP address pool settings.
+            <div class="tooltip-text">DHCP servers with improperly configured address ranges</div>
             <p>DHCP servers may be configured with overlapping address pools, causing multiple devices to receive the same IP address.</p>
           </li>
-          <li>Device cloning or OS imaging without updating IP settings.
+          <li class="tooltip">Device cloning or OS imaging without updating IP settings.
+            <div class="tooltip-text">Creates duplicate network configurations</div>
             <p>Cloning devices or using OS images without reconfiguring network settings can result in duplicate IP addresses across devices.</p>
           </li>
-          <li>Rejoining devices attempting to use old IPs.
+          <li class="tooltip">Rejoining devices attempting to use old IPs.
+            <div class="tooltip-text">Devices connecting after absence may cause conflicts</div>
             <p>Devices that were previously disconnected from the network may attempt to reuse their old IP addresses, which might already be assigned to another device.</p>
           </li>
         </ul>
 
         <h3>Simulation File:</h3>
         <p>
-          <a href="simulations/ip_conflict.pkt" download>Download Packet Tracer Simulation</a>
-          <h3>Table: IP configuration of devices</h3>
-        </p> 
-        <table>
-        <tr>
-            <th>Device</th>
-            <th>IP Address</th>
-            <th>Subnet Mask</th>
-            <th>Default Gateway</th>
-        </tr>
-        <tr>
-            <td>PC0</td>
-            <td>192.168.1.10</td>
-            <td>255.255.255.0</td>
-            <td>192.168.1.1</td>
-        </tr>
-        <tr>
-            <td>PC1</td>
-            <td>192.168.1.11</td>
-            <td>255.255.255.0</td>
-            <td>192.168.1.1</td>
-        </tr>
-        <tr>
-            <td>PC2</td>
-            <td>192.168.1.10</td>
-            <td>255.255.255.0</td>
-            <td>192.168.1.1</td>
-        </tr>
-        <tr>
-            <td>Switch0</td>
-            <td>192.168.1.100</td>
-            <td>255.255.255.0</td>
-            <td>—</td>
-        </tr>
-        </table>        <h3>Verifying Connectivity with Ping</h3>
-        <div class="image-grid">
-          <div class="image-grid-item">
-            <img src="images/ipconf/ip_conflict_1.png" alt="IP Conflict Simulation">
+          <a href="simulations/ip_conflict.pkt" download class="download-btn"><i class="fas fa-download"></i> Download Packet Tracer Simulation</a>
+        </p>
+        
+        <div class="tab-container">          <div class="tab-header">
+            <button class="tab-btn active">Network Configuration</button>
+            <button class="tab-btn">Problem Detection</button>
+            <button class="tab-btn">Solution</button>
           </div>
-          <div class="image-grid-item">
-            <img src="images/ipconf/ip_conflict_2.png" alt="IP Conflict Simulation">
+          
+          <div class="tab-content active">
+            <h3>Table: IP configuration of devices</h3>
+            <div class="responsive-table">
+              <table>
+                <tr>
+                  <th>Device</th>
+                  <th>IP Address</th>
+                  <th>Subnet Mask</th>
+                  <th>Default Gateway</th>
+                  <th>Status</th>
+                </tr>
+                <tr>
+                  <td>PC0</td>
+                  <td>192.168.1.10</td>
+                  <td>255.255.255.0</td>
+                  <td>192.168.1.1</td>
+                  <td class="warning">Conflict</td>
+                </tr>
+                <tr>
+                  <td>PC1</td>
+                  <td>192.168.1.11</td>
+                  <td>255.255.255.0</td>
+                  <td>192.168.1.1</td>
+                  <td>Normal</td>
+                </tr>
+                <tr>
+                  <td>PC2</td>
+                  <td>192.168.1.10</td>
+                  <td>255.255.255.0</td>
+                  <td>192.168.1.1</td>
+                  <td class="warning">Conflict</td>
+                </tr>
+                <tr>
+                  <td>Switch0</td>
+                  <td>192.168.1.100</td>
+                  <td>255.255.255.0</td>
+                  <td>—</td>
+                  <td>Normal</td>
+                </tr>
+              </table>
+            </div>
           </div>
-          <div class="image-grid-full">
-            <img src="images/ipconf/ip_conflict_3.png" alt="IP Conflict Simulation">
+          
+          <div class="tab-content">
+            <h3>Verifying Connectivity with Ping</h3>            <div class="info-box info">
+              <strong>Note:</strong> Devices with IP conflicts cannot communicate properly on the network and experience connectivity issues.
+            </div>
+            <div class="image-grid">
+              <div class="image-grid-item">                <img src="images/ipconf/ip_conflict_1.png" alt="PC0 ping test - Failed due to conflict">
+              </div>
+              <div class="image-grid-item">
+                <img src="images/ipconf/ip_conflict_2.png" alt="PC1 ping test - Normally functioning device">
+              </div>
+              <div class="image-grid-full">
+                <img src="images/ipconf/ip_conflict_3.png" alt="ARP table - Multiple MAC addresses for the same IP">
+              </div>
+            </div>
           </div>
-        </div>
-
-        <h3>Solution Steps:</h3>
-        <ol>
-          <li>Scan the network using tools like <code>arp -a</code> or network mapping to detect duplicate IPs.</li>
-          <img src="images/ipconf/ip_conflict_4.png" alt="IP Conflict Simulation" style="width: 100%; max-width: 600px;">
-          <li>Identify devices sharing the same IP manually or through simulation.</li>
-          <li>Reassign a unique IP to one of the conflicting devices (e.g., change from 192.168.1.10 to 192.168.1.12).</li>
-          <img src="images/ipconf/ip_conflict_5.png" alt="IP Conflict Simulation" style="width: 100%; max-width: 600px;">
-          <li>Check and correct DHCP server configuration to prevent overlapping assignments.
-            <ol>
-              <li>Click on the router in Packet Tracer and switch to the <strong>CLI</strong> tab.</li>
-              <li>Check the DHCP pool configuration by running the following command:
-                <pre><code>show running-config | include dhcp</code></pre>
+          
+          <div class="tab-content">
+            <h3>Solution Steps:</h3>
+            <div class="progress-bar">
+              <div class="progress-value" style="width: 0%"></div>
+            </div>
+            <ol class="solution-steps">
+              <li class="step" data-progress="16">
+                <h4>Scan the network using tools like <code>arp -a</code> or network mapping to detect duplicate IPs.</h4>
+                <div class="image-container">                  <img src="images/ipconf/ip_conflict_4.png" alt="IP conflict detection using ARP scan">
+                  <div class="image-caption">IP conflict detection using ARP scan</div>
+                </div>
               </li>
-              <li>If there is an IP range conflict, correct the DHCP settings:
-                <pre><code>
-                configure terminal
-                ip dhcp excluded-address 192.168.1.10 192.168.1.20
-                ip dhcp pool MYPOOL
-                network 192.168.1.0 255.255.255.0
-                default-router 192.168.1.1
-                end
-                </code></pre>
+              <li class="step" data-progress="32">
+                <h4>Identify devices sharing the same IP manually or through simulation.</h4>
+                <p>Examine the console output to identify which devices are sharing the same IP address. In this scenario, PC0 and PC2 are sharing the same IP address (192.168.1.10).</p>
               </li>
-              <li>Restart the DHCP service to apply the changes:
-                <pre><code>clear ip dhcp binding *</code></pre>
+              <li class="step" data-progress="50">
+                <h4>Reassign a unique IP to one of the conflicting devices.</h4>
+                <div class="image-container">
+                  <img src="images/ipconf/ip_conflict_5.png" alt="Changing PC2's IP address">
+                  <div class="image-caption">Changing PC2's IP address to 192.168.1.12</div>
+                </div>
+              </li>
+              <li class="step" data-progress="75">
+                <h4>Check and correct DHCP server configuration to prevent overlapping assignments.</h4>
+                <ol>
+                  <li>Click on the router in Packet Tracer and switch to the <strong>CLI</strong> tab.</li>
+                  <li>Check the DHCP pool configuration by running the following command:
+                    <pre><code>show running-config | include dhcp</code></pre>
+                  </li>
+                  <li>If there is an IP range conflict, correct the DHCP settings:
+                    <pre><code>configure terminal
+ip dhcp excluded-address 192.168.1.10 192.168.1.20
+ip dhcp pool MYPOOL
+network 192.168.1.0 255.255.255.0
+default-router 192.168.1.1
+end</code></pre>
+                  </li>
+                  <li>Restart the DHCP service to apply the changes:
+                    <pre><code>clear ip dhcp binding *</code></pre>
+                  </li>
+                </ol>
+              </li>
+              <li class="step" data-progress="90">                <h4>Ping test all IPs to verify uniqueness and restore connectivity.</h4>
+                <div class="image-container">
+                  <img src="images/ipconf/ip_conflict_9.png" alt="Connection test after solution">
+                  <div class="image-caption">Successful ping test after IP conflict resolution</div>
+                </div>
+              </li>
+              <li class="step" data-progress="100">
+                <h4>Document IP usage and consider using IP address management tools.</h4>
+                <div class="info-box success">
+                  <strong>Best Practice:</strong> Documenting IP addresses using a table or IP Address Management System (IPAM) helps prevent future conflicts.
+                </div>
               </li>
             </ol>
-          </li>
-          <li>Ping test all IPs to verify uniqueness and restore connectivity.</li>
-          <img src="images/ipconf/ip_conflict_9.png" alt="IP Conflict Simulation" style="width: 100%; max-width: 600px;">
-          <li>Document IP usage and consider using IP address management tools.</li>
-        </ol>
+          </div>
+        </div>
+      </div>    <div id="Inter_vlan_communication_problem" class="problem-details">
+      <h2>2. Inter-Vlan Routing Issue (Network Layer - Layer 3)</h2>
+      
+      <!-- Dashboard summary -->
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <h4>Difficulty Level</h4>
+          <p>Medium</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Layers</h4>
+          <p>Network Layer (L3)</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Protocols</h4>
+          <p>IP, VLAN, 802.1Q</p>
+        </div>
       </div>
-    <div id="Inter_vlan_communication_problem"  >
-      <h2>2. Inter-Vlan Routing Issue</h2>
+      
       <h3>Problem Definition:</h3>
       <p>
         Inter-VLAN routing is the process of forwarding traffic between different VLANs (Virtual Local Area Networks) on a network. 
         This is typically done using a Layer 3 device, such as a router or a Layer 3 switch. 
         Without proper inter-VLAN routing, devices in different VLANs cannot communicate with each other.
       </p>
+      
       <h3>Potential Causes:</h3>
-      <ul>
-        <li>Missing or misconfigured VLAN interfaces on the router or Layer 3 switch.</li>
-        <li>Incorrect IP addressing or subnetting for VLANs.</li>
-        <li>Switchport configurations not set to trunk mode for inter-VLAN communication.</li>
+      <ul class="animate-in">
+        <li class="tooltip">Missing or misconfigured VLAN interfaces on the router or Layer 3 switch.
+          <div class="tooltip-text">Router interfaces must be properly configured for each VLAN</div>
+          <p>The router requires properly configured subinterfaces with the correct VLAN IDs to route between VLANs.</p>
+        </li>
+        <li class="tooltip">Incorrect IP addressing or subnetting for VLANs.
+          <div class="tooltip-text">IP subnets must match the VLAN configuration</div>
+          <p>Each VLAN should have its unique subnet to ensure proper routing between networks.</p>
+        </li>
+        <li class="tooltip">Switchport configurations not set to trunk mode for inter-VLAN communication.
+          <div class="tooltip-text">Trunk ports must carry multiple VLAN traffic</div>
+          <p>The switch port connecting to the router must be set to trunk mode to carry traffic from multiple VLANs.</p>
+        </li>
       </ul>
+      
       <h3>Simulation File:</h3>
-      <a href="simulations/Inter_VLAN_Routing.pka" download>Download Packet Tracer Simulation</a>
-
-      <h3>Solution Steps:</h3>
-      <ol>
-        <li>Check connection</li>
-        <img src="images/inter_vlan_routing/check_connection.png" alt="Inter VLAN communication problem" style="width: 50%;">
-        <li>Check configuration on switch</li>
-        <img src="images/inter_vlan_routing/check_vlan_on_switch.png" alt="Inter VLAN communication problem" style="width: 50%;">
-        <p>On switch gigabitEthernet0/1 to router must be trunk mode because it is connected to router</p>
-        <img src="images/inter_vlan_routing/g01accessmode.png" alt="Inter VLAN communication problem" style="width: 50%;">
-        <p>Fix it:</p>
-        <pre><code>
-        configure terminal
-        interface gigabitEthernet0/1
-        switchport mode trunk
-        switchport trunk allowed vlan 10,30
-        </code></pre>
-        <img src="images/inter_vlan_routing/g01totrunkmode.png" alt="Inter VLAN communication problem" style="width: 50%;">
-        <p>Check configuration on router</p>
-        <img src="images/inter_vlan_routing/g01totrunkmode.png" alt="Inter VLAN communication problem" style="width: 50%;">
-        <p>g01.10 g01.30 are sub interfaces of g01 and they are configured with IP address. Their encapsulation type is dot1q and they must match with the VLAN ID</p>
-        <img src="images/inter_vlan_routing/router_configuration.png" alt="Inter VLAN communication problem" style="width: 50%;">
-        <p>Fix it:</p>
-        <pre><code>
-        configure terminal
-        interface gigabitEthernet0/1.10
-        no encapsulation dot1Q 30
-        exit
-        interface gigabitEthernet0/1.30
-        no encapsulation dot1Q 10
-        encapsulation dot1Q 30
-        ip address 172.17.30.1 255.255.255.0
-        exit
-        interface gigabitEthernet0/1.10
-        encapsulation dot1Q 10
-        ip address 172.17.10.1 255.255.255.0
-        no shutdown
-        exit
-        </code></pre>
-        <p>After that, try to ping from one VLAN to another to check if it is working</p>
-        <img src="images/inter_vlan_routing/verify_after_solution.png" alt="Inter VLAN communication problem" style="width: 50%;">
-      </ol>
-    </div>
-    <div id="dhcp-issue" class="problem-details"  >
-      <h2>3. DHCP Server Issues</h2>
+      <p>
+        <a href="simulations/Inter_VLAN_Routing.pka" download class="download-btn"><i class="fas fa-download"></i> Download Packet Tracer Simulation</a>
+      </p>
+      
+      <div class="tab-container">
+        <div class="tab-header">
+          <button class="tab-btn active">Network Configuration</button>
+          <button class="tab-btn">Problem Detection</button>
+          <button class="tab-btn">Solution</button>
+        </div>
+        
+        <div class="tab-content active">
+          <h3>Table: VLAN Configuration</h3>
+          <div class="responsive-table">
+            <table>
+              <tr>
+                <th>VLAN ID</th>
+                <th>Name</th>
+                <th>Subnet</th>
+                <th>Default Gateway</th>
+                <th>Connected Devices</th>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>Faculty</td>
+                <td>172.17.10.0/24</td>
+                <td>172.17.10.1</td>
+                <td>PC1, PC2</td>
+              </tr>
+              <tr>
+                <td>30</td>
+                <td>Student</td>
+                <td>172.17.30.0/24</td>
+                <td>172.17.30.1</td>
+                <td>PC3, PC4</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>Connectivity Testing</h3>
+          <div class="info-box info">
+            <strong>Note:</strong> When inter-VLAN routing is not working properly, devices in different VLANs cannot ping each other.
+          </div>
+          <div class="image-container">
+            <img src="images/inter_vlan_routing/check_connection.png" alt="Failed connectivity between VLANs">
+            <div class="image-caption">Failed ping test between devices in different VLANs</div>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>Solution Steps:</h3>
+          <div class="progress-bar">
+            <div class="progress-value" style="width: 0%"></div>
+          </div>
+          <ol class="solution-steps">
+            <li class="step" data-progress="20">
+              <h4>Verify switch port configuration</h4>
+              <div class="image-container">
+                <img src="images/inter_vlan_routing/check_vlan_on_switch.png" alt="VLAN configuration on switch">
+                <div class="image-caption">Checking VLAN assignments on the switch</div>
+              </div>
+              <p>On switch gigabitEthernet0/1 to router must be trunk mode because it is connected to router</p>
+              <div class="image-container">
+                <img src="images/inter_vlan_routing/g01accessmode.png" alt="Switch port in access mode instead of trunk">
+                <div class="image-caption">Interface G0/1 incorrectly configured as access mode</div>
+              </div>
+            </li>
+            <li class="step" data-progress="40">
+              <h4>Configure switch port for trunk mode</h4>
+              <pre><code>configure terminal
+interface gigabitEthernet0/1
+switchport mode trunk
+switchport trunk allowed vlan 10,30
+end</code></pre>
+              <div class="image-container">
+                <img src="images/inter_vlan_routing/g01totrunkmode.png" alt="Switch port changed to trunk mode">
+                <div class="image-caption">Interface G0/1 after changing to trunk mode</div>
+              </div>
+            </li>
+            <li class="step" data-progress="60">
+              <h4>Check router subinterfaces configuration</h4>
+              <p>G0/1.10 and G0/1.30 are subinterfaces of G0/1 and they are configured with IP addresses. Their encapsulation type is dot1q and they must match with the VLAN ID</p>
+              <div class="image-container">
+                <img src="images/inter_vlan_routing/router_configuration.png" alt="Router subinterface configuration">
+                <div class="image-caption">Router subinterface configuration showing incorrect VLAN assignments</div>
+              </div>
+            </li>
+            <li class="step" data-progress="80">
+              <h4>Configure router subinterfaces correctly</h4>
+              <pre><code>configure terminal
+interface gigabitEthernet0/1.10
+no encapsulation dot1Q 30
+exit
+interface gigabitEthernet0/1.30
+no encapsulation dot1Q 10
+encapsulation dot1Q 30
+ip address 172.17.30.1 255.255.255.0
+exit
+interface gigabitEthernet0/1.10
+encapsulation dot1Q 10
+ip address 172.17.10.1 255.255.255.0
+no shutdown
+exit</code></pre>
+            </li>
+            <li class="step" data-progress="100">
+              <h4>Verify inter-VLAN connectivity</h4>
+              <p>After making the changes, try to ping from one VLAN to another to check if it is working</p>
+              <div class="image-container">
+                <img src="images/inter_vlan_routing/verify_after_solution.png" alt="Successful inter-VLAN communication">
+                <div class="image-caption">Successful ping test between devices in different VLANs</div>
+              </div>
+              <div class="info-box success">
+                <strong>Best Practice:</strong> Always ensure switch ports connecting to routers are configured as trunk ports and that router subinterfaces have the correct VLAN encapsulation.
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>    <div id="dhcp-issue" class="problem-details">
+      <h2>3. DHCP Server Issues (Network Layer - Layer 3)</h2>
+      
+      <!-- Dashboard summary -->
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <h4>Difficulty Level</h4>
+          <p>Medium</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Layers</h4>
+          <p>Network Layer (L3)</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Protocols</h4>
+          <p>DHCP, IP</p>
+        </div>
+      </div>
+      
       <h3>Problem Definition:</h3>
       <p>Devices fail to obtain IP addresses automatically due to DHCP server 
         misconfigurations or failures. This can result in devices being unable
         to communicate on the network, leading to connectivity issues and disruptions
           in network services. Without a valid IP address, devices cannot access shared resources, 
           connect to the internet, or communicate with other devices on the network.</p>
+      
       <h3>Potential Causes:</h3>
-      <ul>
-        <li>DHCP server is not enabled or running.
+      <ul class="animate-in">
+        <li class="tooltip">DHCP server is not enabled or running.
+          <div class="tooltip-text">Server may be disabled or misconfigured</div>
           <p>The DHCP server may be turned off or not functioning, preventing devices from obtaining IP addresses.</p>
         </li>
-        <li>IP address pool is exhausted.
+        <li class="tooltip">IP address pool is exhausted.
+          <div class="tooltip-text">No more available addresses to assign</div>
           <p>The DHCP server has run out of available IP addresses to assign to devices.</p>
         </li>
-        <li>Network devices are not configured to use DHCP.
+        <li class="tooltip">Network devices are not configured to use DHCP.
+          <div class="tooltip-text">Client configuration issues</div>
           <p>Devices may be set to use static IPs instead of obtaining them automatically from the DHCP server.</p>
         </li>
       </ul>
+      
       <h3>Simulation File:</h3>
       <p>
-      <a href="simulations/dhcp_issues.pkt" download>Download Packet Tracer Simulation</a>
-      <h3>DHCP fail message on pc 8</h3>
-      <img src="images/dhcp/failed_message.png" alt="DHCP Fail Message" style="width: 100%; max-width: 600px;">
-      <h3>Solution Steps:</h3>
-      <ol>
-      <li>
-        <strong>Verify that the DHCP server is enabled and running</strong><br>
-        Open the CLI on the router and configure the interface connected to the switch:
-        <pre>
-    Router&gt; enable
-    Router# configure terminal
-    Router(config)# interface GigabitEthernet0/0
-    Router(config-if)# ip address 192.168.1.1 255.255.255.0
-    Router(config-if)# no shutdown
-    Router(config-if)# exit
-        </pre>
-        Then configure the DHCP service on the router:
-        <pre>
-    Router(config)# ip dhcp pool LAN
-    Router(dhcp-config)# network 192.168.1.0 255.255.255.0
-    Router(dhcp-config)# default-router 192.168.1.1
-    Router(dhcp-config)# dns-server 8.8.8.8
-    Router(dhcp-config)# exit
-        </pre>
-      </li>
-
-      <li>
-        <strong>Check the IP address pool and expand it if necessary</strong><br>
-        If one or more PCs do not receive an IP address (e.g., PC9), the address pool may be too small. Check for excluded addresses:
-        <pre>
-          Router# show running-config
-        </pre>
-        <img src="images/dhcp/excluded_addresses.png" alt="Excluded Addresses" style="width: 100%; max-width: 600px;">
-        <p>If the range is too narrow, reduce the excluded IP range like this:</p>
-        <pre>
-    Router(config)# no ip dhcp excluded-address 192.168.1.1 192.168.1.191
-    Router(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.189
-        </pre>
-        This change increases available IPs in the pool for more clients.
-      </li>
-
-      <li>
-        <strong>Ensure devices are set to obtain IP addresses automatically</strong><br>
-        For each PC:
-        <ul>
-          <li>Click on the PC.</li>
-          <li>Go to the <strong>Desktop</strong> tab.</li>
-          <li>Open <strong>IP Configuration</strong>.</li>
-          <li>Select the <strong>DHCP</strong> option (instead of Static).</li>
-        </ul>
-        After selecting DHCP, the PC should receive an IP like <code>192.168.1.190</code> or higher (depending on the available range).
-        <img src="images/dhcp/successful_assign.png" alt="IP Configuration" style="width: 100%; max-width: 600px;">
-      </li>
-    </ol>
-
-    </div>
-    <div id="dhcp-spoofing" class="problem-details"  >
-      <h2>4. DHCP Spoofing Attack: Prevention & Mitigation</h2>
+        <a href="simulations/dhcp_issues.pkt" download class="download-btn"><i class="fas fa-download"></i> Download Packet Tracer Simulation</a>
+      </p>
+      
+      <div class="tab-container">
+        <div class="tab-header">
+          <button class="tab-btn active">Network Configuration</button>
+          <button class="tab-btn">Problem Detection</button>
+          <button class="tab-btn">Solution</button>
+        </div>
+        
+        <div class="tab-content active">
+          <h3>Table: Network Device Configuration</h3>
+          <div class="responsive-table">
+            <table>
+              <tr>
+                <th>Device</th>
+                <th>IP Assignment Method</th>
+                <th>Status</th>
+              </tr>
+              <tr>
+                <td>Router</td>
+                <td>192.168.1.1/24 (Static)</td>
+                <td>DHCP Server</td>
+              </tr>
+              <tr>
+                <td>PC1-PC8</td>
+                <td>DHCP Client</td>
+                <td>Normal</td>
+              </tr>
+              <tr>
+                <td>PC9</td>
+                <td>DHCP Client</td>
+                <td class="warning">No IP Address</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>DHCP Failure Detection</h3>
+          <div class="info-box info">
+            <strong>Note:</strong> When a DHCP server is misconfigured or the address pool is exhausted, clients may fail to obtain IP addresses.
+          </div>
+          <div class="image-container">
+            <img src="images/dhcp/failed_message.png" alt="DHCP Fail Message">
+            <div class="image-caption">DHCP failure message on PC8 indicating no available IP address</div>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>Solution Steps:</h3>
+          <div class="progress-bar">
+            <div class="progress-value" style="width: 0%"></div>
+          </div>
+          <ol class="solution-steps">
+            <li class="step" data-progress="25">
+              <h4>Verify that the DHCP server is enabled and running</h4>
+              <p>Open the CLI on the router and configure the interface connected to the switch:</p>
+              <pre><code>Router> enable
+Router# configure terminal
+Router(config)# interface GigabitEthernet0/0
+Router(config-if)# ip address 192.168.1.1 255.255.255.0
+Router(config-if)# no shutdown
+Router(config-if)# exit</code></pre>
+              <p>Then configure the DHCP service on the router:</p>
+              <pre><code>Router(config)# ip dhcp pool LAN
+Router(dhcp-config)# network 192.168.1.0 255.255.255.0
+Router(dhcp-config)# default-router 192.168.1.1
+Router(dhcp-config)# dns-server 8.8.8.8
+Router(dhcp-config)# exit</code></pre>
+            </li>
+            
+            <li class="step" data-progress="50">
+              <h4>Check the IP address pool and expand it if necessary</h4>
+              <p>If one or more PCs do not receive an IP address (e.g., PC9), the address pool may be too small. Check for excluded addresses:</p>
+              <pre><code>Router# show running-config</code></pre>
+              <div class="image-container">
+                <img src="images/dhcp/excluded_addresses.png" alt="Excluded Addresses">
+                <div class="image-caption">Router configuration showing excessive excluded address range</div>
+              </div>
+              <p>If the range is too narrow, reduce the excluded IP range like this:</p>
+              <pre><code>Router(config)# no ip dhcp excluded-address 192.168.1.1 192.168.1.191
+Router(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.189</code></pre>
+              <p>This change increases available IPs in the pool for more clients.</p>
+            </li>
+            
+            <li class="step" data-progress="75">
+              <h4>Ensure devices are set to obtain IP addresses automatically</h4>
+              <p>For each PC that needs to use DHCP:</p>
+              <ol>
+                <li>Click on the PC.</li>
+                <li>Go to the <strong>Desktop</strong> tab.</li>
+                <li>Open <strong>IP Configuration</strong>.</li>
+                <li>Select the <strong>DHCP</strong> option (instead of Static).</li>
+              </ol>
+            </li>
+            
+            <li class="step" data-progress="100">
+              <h4>Verify successful IP assignment</h4>
+              <div class="image-container">
+                <img src="images/dhcp/successful_assign.png" alt="IP Configuration">
+                <div class="image-caption">Successful IP address assignment via DHCP</div>
+              </div>
+              <div class="info-box success">
+                <strong>Best Practice:</strong> Always configure the DHCP server with sufficient address space for all clients, and reserve specific addresses for network infrastructure devices.
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>    <div id="dhcp-spoofing" class="problem-details">
+      <h2>4. DHCP Spoofing Attack (Data Link/Network Layers - L2/L3)</h2>
+      
+      <!-- Dashboard summary -->
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <h4>Difficulty Level</h4>
+          <p>High</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Layers</h4>
+          <p>Data Link (L2), Network (L3)</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Protocols</h4>
+          <p>DHCP, ARP</p>
+        </div>
+      </div>
       
       <h3>Problem Definition:</h3>
       <p>An attacker introduces a rogue DHCP server to distribute malicious network configurations, potentially intercepting or redirecting network traffic.</p>
       
       <h3>Potential Causes:</h3>
-      <ul>
-        <li>Unsecured switch ports allowing unauthorized DHCP servers.</li>
-        <li>Missing DHCP snooping protection on network switches.</li>
-        <li>Lack of port security measures.</li>
-        <li>Physical access to network infrastructure.</li>
+      <ul class="animate-in">
+        <li class="tooltip">Unsecured switch ports allowing unauthorized DHCP servers.
+          <div class="tooltip-text">No port security measures implemented</div>
+          <p>When switch ports are not properly secured, attackers can connect rogue DHCP servers to the network.</p>
+        </li>
+        <li class="tooltip">Missing DHCP snooping protection on network switches.
+          <div class="tooltip-text">No DHCP traffic monitoring</div>
+          <p>Without DHCP snooping, switches cannot distinguish between legitimate and malicious DHCP servers.</p>
+        </li>
+        <li class="tooltip">Physical access to network infrastructure.
+          <div class="tooltip-text">Unauthorized physical network access</div>
+          <p>Unauthorized physical access to network equipment allows attackers to connect malicious devices.</p>
+        </li>
       </ul>
       
       <h3>Simulation File:</h3>
       <p>
-        <a href="simulations/DHCP_Snooping_Attack.pkt" download>Download Packet Tracer Simulation</a>
+        <a href="simulations/DHCP_Snooping_Attack.pkt" download class="download-btn"><i class="fas fa-download"></i> Download Packet Tracer Simulation</a>
       </p>
-      <h3>Router Configuration for Saving Current Status:</h3>
-      <p>I was unable to save the current status and initial configurations on Packet Tracer, use the following commands:</p>
       
-      <h4>For Router 2:</h4>
-      <pre><code>
-    enable
-    configure terminal
-    interface gigabitEthernet0/0/0
-    no shutdown
-    exit
-
-    ip dhcp pool CCNA
-    network 192.168.2.0 255.255.255.0
-    default-router 192.168.2.100
-    dns-server 192.168.2.50
-    exit
-
-    interface gigabitEthernet0/0/0
-    ip address 192.168.2.100 255.255.255.0
-    no shutdown
-    exit
-    exit
-    write memory
-      </code></pre>
-
-      <h4>For Router 1:</h4>
-      <pre><code>
-    enable
-    configure terminal
-    interface gigabitEthernet0/0/0
-    no shutdown
-    exit
-
-    ip dhcp pool CNC
-    network 192.168.1.0 255.255.255.0
-    default-router 192.168.1.100
-    dns-server 192.168.1.50
-    exit
-
-    interface gigabitEthernet0/0/0
-    ip address 192.168.1.100 255.255.255.0
-    no shutdown
-    exit
-    exit
-    write memory
-      </code></pre>
-      <h3>DHCP Spoofing Attack Simulation:</h3>
-      <img src="images/dhcp_spoofing/simulation.png" alt="DHCP Spoofing Attack Simulation" style="width: 100%; max-width: 600px;">
-      
-      <table>
-        <thead>
-            <tr>
-                <th>Device Type</th>
-                <th>IP Address</th>
-                <th>Connected Port</th>
-                <th>Details</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Legitimate DHCP Server</td>
-                <td>192.168.1.100</td>
-                <td>Switch Port 5</td>
-                <td>IP Range: 192.168.1.10-50</td>
-                <td>Secure</td>
-            </tr>
-            <tr>
-                <td>Rogue DHCP Server</td>
-                <td>192.168.2.100</td>
-                <td>Switch Port 6</td>
-                <td>IP Range: 192.168.2.10-50</td>
-                <td class="warning">ATTACKER</td>
-            </tr>
-            <tr class="warning">
-                <td>Workstation 1</td>
-                <td>192.168.2.6</td>
-                <td>Switch Port 1</td>
-                <td>Compromised by rogue DHCP</td>
-                <td class="warning">COMPROMISED</td>
-            </tr>
-            <tr>
-                <td>Workstation 2</td>
-                <td>192.168.1.2</td>
-                <td>Switch Port 2</td>
-                <td>Normal client</td>
-                <td>Secure</td>
-            </tr>
-            <tr>
-                <td>Workstation 3</td>
-                <td>192.168.1.3</td>
-                <td>Switch Port 3</td>
-                <td>Normal client</td>
-                <td>Secure</td>
-            </tr>
-            <tr class="warning">
-                <td>Workstation 4</td>
-                <td>192.168.2.5</td>
-                <td>Switch Port 4</td>
-                <td>Compromised by rogue DHCP</td>
-                <td class="warning">COMPROMISED</td>
-            </tr>
-        </tbody>
-      </table>
-      
-      <img src="images/dhcp_spoofing/spoofed_pcs.png" alt="Rogue DHCP Server" style="width: 100%; max-width: 600px;">
-      
-      <h3>Solution Steps:</h3>
-      <ol>
-        <li>
-          <strong>Enable DHCP Snooping:</strong>
-          <p>With this, all ports are untrusted by default, and only the trusted ports can send DHCP messages.</p>
-          <pre><code>
-    ip dhcp snooping
-          </code></pre>
-        </li>
+      <div class="tab-container">
+        <div class="tab-header">
+          <button class="tab-btn active">Network Configuration</button>
+          <button class="tab-btn">Attack Simulation</button>
+          <button class="tab-btn">Solution</button>
+        </div>
         
-        <li>
-          <strong>Configure Trusted Ports:</strong>
-          <pre><code>
-    interface fastethernet 0/5
-    ip dhcp snooping trust
-    no ip dh snooping information option 
-    exit
-          </code></pre>
-        </li>
-        
-        <li>
-          <strong>Verify Configuration:</strong>
-          <pre><code>
+        <div class="tab-content active">
+          <h3>Router Configuration for Initial Setup:</h3>
+          
+          <h4>For Router 2 (Rogue):</h4>
+          <pre><code>enable
+configure terminal
+interface gigabitEthernet0/0/0
+no shutdown
+exit
 
-    do show ip dhcp snooping
-    show ip dhcp snooping binding
+ip dhcp pool CCNA
+network 192.168.2.0 255.255.255.0
+default-router 192.168.2.100
+dns-server 192.168.2.50
+exit
 
-          </code></pre>
-        </li>
-        <img src="images/dhcp_spoofing/fixed.png" alt="Verify Configuration" style="width: 100%; max-width: 600px;">
+interface gigabitEthernet0/0/0
+ip address 192.168.2.100 255.255.255.0
+no shutdown
+exit
+exit
+write memory</code></pre>
+
+          <h4>For Router 1 (Legitimate):</h4>
+          <pre><code>enable
+configure terminal
+interface gigabitEthernet0/0/0
+no shutdown
+exit
+
+ip dhcp pool CNC
+network 192.168.1.0 255.255.255.0
+default-router 192.168.1.100
+dns-server 192.168.1.50
+exit
+
+interface gigabitEthernet0/0/0
+ip address 192.168.1.100 255.255.255.0
+no shutdown
+exit
+exit
+write memory</code></pre>
+
+          <div class="responsive-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Device Type</th>
+                  <th>IP Address</th>
+                  <th>Connected Port</th>
+                  <th>Details</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Legitimate DHCP Server</td>
+                  <td>192.168.1.100</td>
+                  <td>Switch Port 5</td>
+                  <td>IP Range: 192.168.1.10-50</td>
+                  <td>Secure</td>
+                </tr>
+                <tr>
+                  <td>Rogue DHCP Server</td>
+                  <td>192.168.2.100</td>
+                  <td>Switch Port 6</td>
+                  <td>IP Range: 192.168.2.10-50</td>
+                  <td class="warning">ATTACKER</td>
+                </tr>
+                <tr class="warning">
+                  <td>Workstation 1</td>
+                  <td>192.168.2.6</td>
+                  <td>Switch Port 1</td>
+                  <td>Compromised by rogue DHCP</td>
+                  <td class="warning">COMPROMISED</td>
+                </tr>
+                <tr>
+                  <td>Workstation 2</td>
+                  <td>192.168.1.2</td>
+                  <td>Switch Port 2</td>
+                  <td>Normal client</td>
+                  <td>Secure</td>
+                </tr>
+                <tr>
+                  <td>Workstation 3</td>
+                  <td>192.168.1.3</td>
+                  <td>Switch Port 3</td>
+                  <td>Normal client</td>
+                  <td>Secure</td>
+                </tr>
+                <tr class="warning">
+                  <td>Workstation 4</td>
+                  <td>192.168.2.5</td>
+                  <td>Switch Port 4</td>
+                  <td>Compromised by rogue DHCP</td>
+                  <td class="warning">COMPROMISED</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
         
-        <li>
-          <strong>Implement Additional Protections:</strong>
-          <ul>
-            <li>Port security to limit device connections.</li>
-            <li>Dynamic ARP Inspection (DAI).</li>
-            <li>IP Source Guard.</li>
-          </ul>
-        </li>
-      </ol>
-      
-      <h3>Expected Results:</h3>
-      <ul>
-        <li>Only authorized DHCP servers can distribute IP addresses.</li>
-        <li>Rogue DHCP server responses are blocked.</li>
-        <li>Network clients receive legitimate configuration.</li>
-      </ul>
-      
-      <div class="note">
-        <strong>Remember:</strong> Attack = Spoofing | Defense = Snooping
+        <div class="tab-content">
+          <h3>DHCP Spoofing Attack Detection</h3>
+          <div class="info-box warning">
+            <strong>Warning:</strong> When a rogue DHCP server is active on the network, clients may receive malicious configuration that redirects traffic through an attacker's system.
+          </div>
+          <div class="image-container">
+            <img src="images/dhcp_spoofing/simulation.png" alt="DHCP Spoofing Attack Simulation">
+            <div class="image-caption">Network topology showing legitimate and rogue DHCP servers</div>
+          </div>
+          <div class="image-container">
+            <img src="images/dhcp_spoofing/spoofed_pcs.png" alt="Rogue DHCP Server">
+            <div class="image-caption">Workstations receiving addresses from the rogue DHCP server</div>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>Solution Steps:</h3>
+          <div class="progress-bar">
+            <div class="progress-value" style="width: 0%"></div>
+          </div>
+          <ol class="solution-steps">
+            <li class="step" data-progress="25">
+              <h4>Enable DHCP Snooping on the Switch</h4>
+              <p>With this, all ports are untrusted by default, and only the trusted ports can send DHCP messages:</p>
+              <pre><code>Switch> enable
+Switch# configure terminal
+Switch(config)# ip dhcp snooping</code></pre>
+            </li>
+            
+            <li class="step" data-progress="50">
+              <h4>Configure Trusted Ports</h4>
+              <p>Mark the port connected to the legitimate DHCP server as trusted:</p>
+              <pre><code>Switch(config)# interface fastethernet 0/5
+Switch(config-if)# ip dhcp snooping trust
+Switch(config-if)# exit
+Switch(config)# no ip dhcp snooping information option
+Switch(config)# exit</code></pre>
+            </li>
+            
+            <li class="step" data-progress="75">
+              <h4>Verify Configuration</h4>
+              <p>Check that DHCP snooping is properly configured:</p>
+              <pre><code>Switch# show ip dhcp snooping
+Switch# show ip dhcp snooping binding</code></pre>
+              <div class="image-container">
+                <img src="images/dhcp_spoofing/fixed.png" alt="Verify Configuration">
+                <div class="image-caption">DHCP snooping verification showing trusted port and bindings</div>
+              </div>
+            </li>
+            
+            <li class="step" data-progress="100">
+              <h4>Implement Additional Protections</h4>
+              <ul>
+                <li>Configure port security to limit device connections</li>
+                <li>Implement Dynamic ARP Inspection (DAI)</li>
+                <li>Enable IP Source Guard</li>
+              </ul>
+              <div class="info-box success">
+                <strong>Best Practice:</strong> Remember that the attack mechanism is "Spoofing" and the defense is "Snooping". Always implement DHCP snooping on production networks to protect against rogue DHCP servers.
+              </div>
+            </li>
+          </ol>
+        </div>
       </div>
-    </div>
-    <div id="default-gateway-issue" class="problem-details"  >
-      <h2>5. Default Gateway Issue</h2>
+    </div>    <div id="default-gateway-issue" class="problem-details">
+      <h2>5. Default Gateway Issue (Network Layer - Layer 3)</h2>
+      
+      <!-- Dashboard summary -->
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <h4>Difficulty Level</h4>
+          <p>Medium</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Layers</h4>
+          <p>Network Layer (L3)</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Protocols</h4>
+          <p>IP, ARP, ICMP</p>
+        </div>
+      </div>
+      
       <h3>Problem Definition:</h3>
       <p>The default gateway is a critical network component that acts as an access point or IP router for devices
         to communicate with other networks, including the internet. Issues with the default gateway can disrupt network 
         connectivity and prevent devices from accessing external resources.</p>
+      
       <h3>Potential Causes:</h3>
-      <ul>
-        <li>Incorrect default gateway IP address configured.
+      <ul class="animate-in">
+        <li class="tooltip">Incorrect default gateway IP address configured.
+          <div class="tooltip-text">Wrong gateway settings on client devices</div>
           <p>If the default gateway IP is set incorrectly on the client device, it will fail to communicate with external networks.</p>
         </li>
-        <li>Default gateway device (e.g., router) is down or unreachable.
+        <li class="tooltip">Default gateway device (e.g., router) is down or unreachable.
+          <div class="tooltip-text">Router hardware or connectivity issues</div>
           <p>The router or gateway device may be powered off, disconnected, or experiencing hardware/software issues.</p>
         </li>
-        <li>Network interface issues on the client device.
+        <li class="tooltip">Network interface issues on the client device.
+          <div class="tooltip-text">Client-side network adapter problems</div>
           <p>Problems with the network adapter, such as driver issues or physical damage, can prevent proper communication with the gateway.</p>
         </li>
       </ul>
+      
       <h3>Simulation File:</h3>
-      <a href="simulations/default_gateway_issue.pka" download>Download Packet Tracer Simulation</a>
-      <h3>Table: Default Gateway Configuration</h3>
-      <table>
-        <tr>
-          <th>Device</th>
-          <th>Interface</th>
-          <th>IP Address</th>
-          <th>Subnet Mask</th>
-          <th>Default Gateway</th>
-        </tr>
-        <tr>
-          <td>R1</td>
-          <td>G0/0</td>
-          <td>192.168.10.1</td>
-          <td>255.255.255.0</td>
-          <td>N/A</td>
-        </tr>
-        <tr>
-          <td>R1</td>
-          <td>G0/1</td>
-          <td>192.168.11.1</td>
-          <td>255.255.255.0</td>
-          <td>N/A</td>
-        </tr>
-        <tr>
-          <td>S1</td>
-          <td>VLAN 1</td>
-          <td>192.168.10.2</td>
-          <td>255.255.255.0</td>
-          <td>blank</td>
-        </tr>
-        <tr>
-          <td>S2</td>
-          <td>VLAN 1</td>
-          <td>192.168.11.2</td>
-          <td>255.255.255.0</td>
-          <td>blank</td>
-        </tr>
-        <tr>
-          <td>PC1</td>
-          <td>NIC</td>
-          <td>192.168.10.10</td>
-          <td>255.255.255.0</td>
-          <td>blank</td>
-        </tr>
-        <tr>
-          <td>PC2</td>
-          <td>NIC</td>
-          <td>192.168.10.11</td>
-          <td>255.255.255.0</td>
-          <td>blank</td>
-        </tr>
-        <tr>
-          <td>PC3</td>
-          <td>NIC</td>
-          <td>192.168.11.10</td>
-          <td>255.255.255.0</td>
-          <td>blank</td>
-        </tr>
-        <tr>
-          <td>PC4</td>
-          <td>NIC</td>
-          <td>192.168.11.11</td>
-          <td>255.255.255.0</td>
-          <td>blank</td>
-        </tr>
-      </table>
-      <h3>Solution Steps:</h3>
-      <ol>
-        <li>verify router configuration for your network <code>show running-config</code> on exec mode.</li>
-        <img src="images/default_gateway/router_config.png" alt="Router Configuration" style="width: 100%; max-width: 600px;">
-        <li>check all pc for their if configuration by their vlan and fix them</li>
-        <img src="images/default_gateway/pc_config.png" alt="PC Configuration" style="width: 100%; max-width: 600px;">
-        <li>Check switch configurations</li>
-        <img src="images/default_gateway/switch_config.png" alt="Switch Configuration" style="width: 100%; max-width: 600px;">
-        <li>in switch1 there is no default gateway and switch2 there is no ip address </li>
-        <li>Fix them by these instructions</li>
-        <pre>
-          switch1
-          <code>
-          enable
-          configure terminal
-          ip default-gateway 192.168.10.1
-          exit
-          write memory
-          </code>
-          switch2
-          <code>
-          enable
-          configure terminal
-          interface vlan 1
-          ip address 192.168.11.2 255.255.255.0
-          no shutdown
-          exit
-          exit
-          write memory
-          </code>
-        <li>Use the <code>ping</code> or <code>tracert</code> command to test connectivity after making changes.</li>
-        <img src="images/default_gateway/ping_test.png" alt="Ping Test" style="width: 100%; max-width: 600px;">
-      </ol>
-    </div>
-    <div id="nat-issue" class="problem-details"  >
-      <h2>6. NAT Configuration Issues</h2>
+      <p>
+        <a href="simulations/default_gateway_issue.pka" download class="download-btn"><i class="fas fa-download"></i> Download Packet Tracer Simulation</a>
+      </p>
+      
+      <div class="tab-container">
+        <div class="tab-header">
+          <button class="tab-btn active">Network Configuration</button>
+          <button class="tab-btn">Problem Detection</button>
+          <button class="tab-btn">Solution</button>
+        </div>
+        
+        <div class="tab-content active">
+          <h3>Table: Default Gateway Configuration</h3>
+          <div class="responsive-table">
+            <table>
+              <tr>
+                <th>Device</th>
+                <th>Interface</th>
+                <th>IP Address</th>
+                <th>Subnet Mask</th>
+                <th>Default Gateway</th>
+              </tr>
+              <tr>
+                <td>R1</td>
+                <td>G0/0</td>
+                <td>192.168.10.1</td>
+                <td>255.255.255.0</td>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <td>R1</td>
+                <td>G0/1</td>
+                <td>192.168.11.1</td>
+                <td>255.255.255.0</td>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <td>S1</td>
+                <td>VLAN 1</td>
+                <td>192.168.10.2</td>
+                <td>255.255.255.0</td>
+                <td class="warning">Not Configured</td>
+              </tr>
+              <tr>
+                <td>S2</td>
+                <td>VLAN 1</td>
+                <td>Not Configured</td>
+                <td>Not Configured</td>
+                <td>Not Configured</td>
+              </tr>
+              <tr>
+                <td>PC1</td>
+                <td>NIC</td>
+                <td>192.168.10.10</td>
+                <td>255.255.255.0</td>
+                <td>192.168.10.1</td>
+              </tr>
+              <tr>
+                <td>PC2</td>
+                <td>NIC</td>
+                <td>192.168.10.11</td>
+                <td>255.255.255.0</td>
+                <td>192.168.10.1</td>
+              </tr>
+              <tr>
+                <td>PC3</td>
+                <td>NIC</td>
+                <td>192.168.11.10</td>
+                <td>255.255.255.0</td>
+                <td>192.168.11.1</td>
+              </tr>
+              <tr>
+                <td>PC4</td>
+                <td>NIC</td>
+                <td>192.168.11.11</td>
+                <td>255.255.255.0</td>
+                <td>192.168.11.1</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>Gateway Issue Detection</h3>
+          <div class="info-box info">
+            <strong>Note:</strong> When default gateway issues occur, devices can communicate within their local network but cannot reach devices in other networks.
+          </div>
+          <div class="image-container">
+            <img src="images/default_gateway/router_config.png" alt="Router Configuration">
+            <div class="image-caption">Router configuration showing interfaces for two subnets</div>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>Solution Steps:</h3>
+          <div class="progress-bar">
+            <div class="progress-value" style="width: 0%"></div>
+          </div>
+          <ol class="solution-steps">
+            <li class="step" data-progress="20">
+              <h4>Verify router configuration</h4>
+              <p>Check the router's running configuration to ensure interfaces are properly configured:</p>
+              <pre><code>Router> enable
+Router# show running-config</code></pre>
+              <div class="image-container">
+                <img src="images/default_gateway/router_config.png" alt="Router Configuration">
+                <div class="image-caption">Router configuration with properly set up interfaces</div>
+              </div>
+            </li>
+            
+            <li class="step" data-progress="40">
+              <h4>Check PC configurations</h4>
+              <p>Verify that all PCs have the correct default gateway configured according to their subnet:</p>
+              <div class="image-container">
+                <img src="images/default_gateway/pc_config.png" alt="PC Configuration">
+                <div class="image-caption">PC configuration showing correct IP and gateway settings</div>
+              </div>
+            </li>
+            
+            <li class="step" data-progress="60">
+              <h4>Check switch configurations</h4>
+              <p>Examine both switches to identify configuration issues:</p>
+              <div class="image-container">
+                <img src="images/default_gateway/switch_config.png" alt="Switch Configuration">
+                <div class="image-caption">Switch configuration showing missing default gateway and IP address</div>
+              </div>
+              <p>Issues identified:</p>
+              <ul>
+                <li>Switch 1 is missing a default gateway configuration</li>
+                <li>Switch 2 has no IP address configured on VLAN 1</li>
+              </ul>
+            </li>
+            
+            <li class="step" data-progress="80">
+              <h4>Configure Switch 1 default gateway</h4>
+              <pre><code>Switch1> enable
+Switch1# configure terminal
+Switch1(config)# ip default-gateway 192.168.10.1
+Switch1(config)# exit
+Switch1# write memory</code></pre>
+              <p>This configures the default gateway on Switch 1 to point to its local router interface.</p>
+              
+              <h4>Configure Switch 2 IP address and default gateway</h4>
+              <pre><code>Switch2> enable
+Switch2# configure terminal
+Switch2(config)# interface vlan 1
+Switch2(config-if)# ip address 192.168.11.2 255.255.255.0
+Switch2(config-if)# no shutdown
+Switch2(config-if)# exit
+Switch2(config)# ip default-gateway 192.168.11.1
+Switch2(config)# exit
+Switch2# write memory</code></pre>
+            </li>
+            
+            <li class="step" data-progress="100">
+              <h4>Verify connectivity between networks</h4>
+              <p>Test connectivity between devices in different subnets using ping:</p>
+              <div class="image-container">
+                <img src="images/default_gateway/ping_test.png" alt="Ping Test">
+                <div class="image-caption">Successful ping test between devices in different subnets</div>
+              </div>
+              <div class="info-box success">
+                <strong>Best Practice:</strong> Always ensure management devices like switches have properly configured default gateways to enable remote management across networks.
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>    <div id="nat-issue" class="problem-details">
+      <h2>6. NAT Configuration Issues (Network Layer - Layer 3)</h2>
+      
+      <!-- Dashboard summary -->
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <h4>Difficulty Level</h4>
+          <p>High</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Layers</h4>
+          <p>Network Layer (L3)</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Protocols</h4>
+          <p>IP, NAT, ACL</p>
+        </div>
+      </div>
+      
       <h3>Problem Definition:</h3>
       <p>
         Network Address Translation (NAT) is a process used to map private IP addresses within a
@@ -599,24 +989,24 @@
       </p>
 
       <h3>Potential Causes:</h3>
-      <ul>
-        <li>
-          Incorrect NAT rules or settings.
+      <ul class="animate-in">
+        <li class="tooltip">Incorrect NAT rules or settings.
+          <div class="tooltip-text">Improper NAT configuration on routers</div>
           <p>
             NAT rules on the router may be misconfigured, leading to improper translation of private IP
             addresses to public IP addresses. For example, missing or incorrect <code>ip nat inside</code>
             or <code>ip nat outside</code> configurations can cause issues.
           </p>
         </li>
-        <li>
-          Overlapping IP address ranges.
+        <li class="tooltip">Overlapping IP address ranges.
+          <div class="tooltip-text">Conflicting network addresses</div>
           <p>
             If the private IP address range overlaps with another network's IP range, NAT may fail to function
             correctly. This can occur in cases where multiple networks are merged or when VPNs are used.
           </p>
         </li>
-        <li>
-          Insufficient NAT resources on the router.
+        <li class="tooltip">Insufficient NAT resources on the router.
+          <div class="tooltip-text">NAT table capacity limits</div>
           <p>
             Routers have a limited capacity for NAT translations. If the number of devices exceeds this capacity,
             new devices may fail to establish connections. This is often referred to as "NAT table exhaustion."
@@ -626,142 +1016,202 @@
 
       <h3>Simulation File:</h3>
       <p>
-        <a href="simulations/NAT_issues.pka" download>Download Packet Tracer Simulation "about static NAT"</a>
+        <a href="simulations/NAT_issues.pka" download class="download-btn"><i class="fas fa-download"></i> Download Packet Tracer Simulation</a>
       </p>
-      <table>
-        <thead>
-          <tr>
-            <th>Device</th>
-            <th>Interface</th>
-            <th>IP Address</th>
-            <th>Subnet Mask</th>
-            <th>Default Gateway</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>R1</td>
-            <td>G0/0</td>
-            <td>10.4.10.254</td>
-            <td>255.255.255.0</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R1</td>
-            <td>G0/1</td>
-            <td>10.4.11.254</td>
-            <td>255.255.255.0</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R1</td>
-            <td>S0/0/1</td>
-            <td>10.4.1.2</td>
-            <td>255.255.255.252</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R2</td>
-            <td>S0/0/0</td>
-            <td>209.165.76.194</td>
-            <td>255.255.255.224</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R2</td>
-            <td>S0/0/1</td>
-            <td>10.4.1.1</td>
-            <td>255.255.255.252</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>Server1</td>
-            <td>NIC</td>
-            <td>64.100.201.5</td>
-            <td>255.255.255.0</td>
-            <td>64.100.201.1</td>
-          </tr>
-          <tr>
-            <td>PC1</td>
-            <td>NIC</td>
-            <td>10.4.10.1</td>
-            <td>255.255.255.0</td>
-            <td>10.4.10.254</td>
-          </tr>
-          <tr>
-            <td>PC2</td>
-            <td>NIC</td>
-            <td>10.4.10.2</td>
-            <td>255.255.255.0</td>
-            <td>10.4.10.254</td>
-          </tr>
-          <tr>
-            <td>L1</td>
-            <td>NIC</td>
-            <td>10.4.11.1</td>
-            <td>255.255.255.0</td>
-            <td>10.4.11.254</td>
-          </tr>
-          <tr>
-            <td>L2</td>
-            <td>NIC</td>
-            <td>10.4.11.2</td>
-            <td>255.255.255.0</td>
-            <td>10.4.11.254</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3>Solution Steps:</h3>
-      <ol>
-        <li>
-          Check all network devices <code>ping ****.****.****.****</code> to destination.
-          <div style="text-align: center;"></div>
-          <p>As we see, only R2 could send ping. So there could be a NAT issue in the network.</p>
-        </li>
-        <li>
-          View NAT translation on R2 with <code>show ip nat translation</code>.
-          <p>If the output is empty, it indicates that no NAT translations are currently active. This could be due to:</p>
-          <ul>
-            <li>No traffic has passed through the NAT-enabled interfaces yet.</li>
-            <li>Incorrect NAT configuration, such as missing or misconfigured access lists or NAT rules.</li>
-            <li>Interfaces not properly marked as <code>ip nat inside</code> or <code>ip nat outside</code>.</li>
-            <li>Devices in the network are not generating traffic that requires NAT.</li>
-          </ul>
-        </li>
-        <li>
-          Verify and correct NAT rules on the router.
-          <p>Check the NAT configuration on the router using the following command:</p>
-          <pre><code>show running-config | include nat</code></pre>
-          <img src="images/nat_issues/swapping_issue.png" alt="NAT Configuration" style="width: 100%; max-width: 600px;">
-          <p>If interfaces are not properly marked as <code>ip nat inside</code> or <code>ip nat outside</code>, fix NAT with:</p>
-          <pre><code>
-    interface s0/0/0
-    ip nat outside
-    interface s0/0/1
-    ip nat inside
-          </code></pre>
-        </li>
-        <li>
-          Ping all network devices and show the access list with <code>show running-config</code> to check NAT configuration.
-          <img src="images/nat_issues/access_list.png" alt="NAT Configuration" style="width: 100%; max-width: 600px;">
-        </li>
-        <li>
-          Upgrade router resources if necessary.
-          <p>Info: For each VLAN, there must be an access permit to ensure proper communication and security.</p>
-          <p>If a VLAN access-list permit is not present, execute the following command:</p>
-          <pre><code>
-    R2(config)# no access-list 101
-    R2(config)# access-list 101 permit ip 10.4.10.0 0.0.1.255 any
-          </code></pre>
-          <p>This command allows NAT for all IPs between 10.4.10.0 and 10.4.11.255. The "any" keyword indicates that access to all destination networks is permitted.</p>
-        </li>
-        <li>Recheck all configurations and test connectivity again to ensure the issue is resolved.</li>
-        <img src="images/nat_issues/after_solution.png" alt="NAT Configuration" style="width: 100%; max-width: 600px;">
-      </ol>
-    </div>
-    <div id="eigrp-issue" class="problem-details" >
-      <h2>7. EIGRP Routing Protocol Problem</h2>
+      
+      <div class="tab-container">
+        <div class="tab-header">
+          <button class="tab-btn active">Network Configuration</button>
+          <button class="tab-btn">Problem Detection</button>
+          <button class="tab-btn">Solution</button>
+        </div>
+        
+        <div class="tab-content active">
+          <h3>Table: NAT Network Configuration</h3>
+          <div class="responsive-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Device</th>
+                  <th>Interface</th>
+                  <th>IP Address</th>
+                  <th>Subnet Mask</th>
+                  <th>Default Gateway</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>R1</td>
+                  <td>G0/0</td>
+                  <td>10.4.10.254</td>
+                  <td>255.255.255.0</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R1</td>
+                  <td>G0/1</td>
+                  <td>10.4.11.254</td>
+                  <td>255.255.255.0</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R1</td>
+                  <td>S0/0/1</td>
+                  <td>10.4.1.2</td>
+                  <td>255.255.255.252</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R2</td>
+                  <td>S0/0/0</td>
+                  <td>209.165.76.194</td>
+                  <td>255.255.255.224</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R2</td>
+                  <td>S0/0/1</td>
+                  <td>10.4.1.1</td>
+                  <td>255.255.255.252</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>Server1</td>
+                  <td>NIC</td>
+                  <td>64.100.201.5</td>
+                  <td>255.255.255.0</td>
+                  <td>64.100.201.1</td>
+                </tr>
+                <tr>
+                  <td>PC1</td>
+                  <td>NIC</td>
+                  <td>10.4.10.1</td>
+                  <td>255.255.255.0</td>
+                  <td>10.4.10.254</td>
+                </tr>
+                <tr>
+                  <td>PC2</td>
+                  <td>NIC</td>
+                  <td>10.4.10.2</td>
+                  <td>255.255.255.0</td>
+                  <td>10.4.10.254</td>
+                </tr>
+                <tr>
+                  <td>L1</td>
+                  <td>NIC</td>
+                  <td>10.4.11.1</td>
+                  <td>255.255.255.0</td>
+                  <td>10.4.11.254</td>
+                </tr>
+                <tr>
+                  <td>L2</td>
+                  <td>NIC</td>
+                  <td>10.4.11.2</td>
+                  <td>255.255.255.0</td>
+                  <td>10.4.11.254</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>NAT Issue Detection</h3>
+          <div class="info-box info">
+            <strong>Note:</strong> When NAT is not functioning correctly, internal devices cannot communicate with external networks or the internet.
+          </div>
+          <p>Test connectivity by pinging from internal devices to external addresses:</p>
+          <pre><code>PC1> ping 64.100.201.5</code></pre>
+          <p>Expected failure if NAT is not working properly.</p>
+          <p>As we see, only R2 could ping external addresses. This indicates a NAT configuration issue.</p>
+        </div>
+        
+        <div class="tab-content">
+          <h3>Solution Steps:</h3>
+          <div class="progress-bar">
+            <div class="progress-value" style="width: 0%"></div>
+          </div>
+          <ol class="solution-steps">
+            <li class="step" data-progress="20">
+              <h4>Verify NAT configuration on the router</h4>
+              <p>Check the current NAT configuration using:</p>
+              <pre><code>Router# show ip nat translation
+Router# show running-config | include nat</code></pre>
+              <p>If the output is empty, it indicates that no NAT translations are currently active. This could be due to:</p>
+              <ul>
+                <li>No traffic has passed through the NAT-enabled interfaces yet</li>
+                <li>Incorrect NAT configuration, such as missing or misconfigured access lists</li>
+                <li>Interfaces not properly marked as <code>ip nat inside</code> or <code>ip nat outside</code></li>
+              </ul>
+            </li>
+            
+            <li class="step" data-progress="40">
+              <h4>Identify interface role issues</h4>
+              <div class="image-container">
+                <img src="images/nat_issues/swapping_issue.png" alt="NAT Configuration">
+                <div class="image-caption">NAT configuration showing incorrect interface assignments</div>
+              </div>
+              <p>The NAT configuration on R2 shows that the inside and outside interfaces are swapped.</p>
+            </li>
+            
+            <li class="step" data-progress="60">
+              <h4>Correct interface NAT roles</h4>
+              <p>Fix the NAT configuration by properly marking interfaces:</p>
+              <pre><code>Router# configure terminal
+Router(config)# interface s0/0/0
+Router(config-if)# ip nat outside
+Router(config-if)# exit
+Router(config)# interface s0/0/1
+Router(config-if)# ip nat inside
+Router(config-if)# exit</code></pre>
+              <p>This correctly configures S0/0/0 (connected to the internet) as the outside interface and S0/0/1 (connected to the internal network) as the inside interface.</p>
+            </li>
+            
+            <li class="step" data-progress="80">
+              <h4>Verify and correct access lists</h4>
+              <div class="image-container">
+                <img src="images/nat_issues/access_list.png" alt="NAT Access List">
+                <div class="image-caption">Access list configuration for NAT translation</div>
+              </div>
+              <p>Ensure that access lists are properly configured to permit traffic from all intended internal networks:</p>
+              <pre><code>Router(config)# no access-list 101
+Router(config)# access-list 101 permit ip 10.4.10.0 0.0.1.255 any</code></pre>
+              <p>This command allows NAT for all IPs between 10.4.10.0 and 10.4.11.255. The "any" keyword indicates that access to all destination networks is permitted.</p>
+            </li>
+            
+            <li class="step" data-progress="100">
+              <h4>Verify connectivity after changes</h4>
+              <div class="image-container">
+                <img src="images/nat_issues/after_solution.png" alt="NAT Configuration">
+                <div class="image-caption">Successful ping test after NAT configuration correction</div>
+              </div>
+              <p>Test connectivity from internal devices to external networks to confirm that NAT is working correctly.</p>
+              <div class="info-box success">
+                <strong>Best Practice:</strong> Always verify NAT configuration using <code>show ip nat translations</code> during active traffic to ensure translations are occurring properly. For production environments, consider implementing NAT logging to help troubleshoot issues.
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>    <div id="eigrp-issue" class="problem-details">
+      <h2>7. EIGRP Routing Protocol Issues (Network Layer - Layer 3)</h2>
+      
+      <!-- Dashboard summary -->
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <h4>Difficulty Level</h4>
+          <p>High</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Layers</h4>
+          <p>Network Layer (L3)</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Protocols</h4>
+          <p>EIGRP, IP</p>
+        </div>
+      </div>
+      
       <h3>Problem Definition:</h3>
       <p>Network connectivity issues arise between routers running the EIGRP protocol,
         leading to missing routes and neighbor adjacency failures. For instance, consider
@@ -771,272 +1221,466 @@
           failures between devices in those networks.</p>
       
       <h3>Potential Causes:</h3>
-      <ul>
-        <li>Mismatched Autonomous System (AS) numbers between routers</li>
-        <li>Missing network statements in EIGRP configuration</li>
-        <li>Auto-summary causing route aggregation issues</li>
-        <li>Missing passive-interface configuration on LAN ports</li>
-        <li>ACL or firewall blocking EIGRP multicast traffic (224.0.0.10)</li>
+      <ul class="animate-in">
+        <li class="tooltip">Mismatched Autonomous System (AS) numbers between routers
+          <div class="tooltip-text">EIGRP AS number must match between neighbors</div>
+          <p>EIGRP routers will only form adjacencies with other routers in the same AS. If AS numbers differ, they will not communicate.</p>
+        </li>
+        <li class="tooltip">Missing network statements in EIGRP configuration
+          <div class="tooltip-text">Incomplete routing configuration</div>
+          <p>Networks must be explicitly advertised in EIGRP to be included in the routing process.</p>
+        </li>
+        <li class="tooltip">Auto-summary causing route aggregation issues
+          <div class="tooltip-text">Unwanted route summarization</div>
+          <p>Auto-summary can cause routing issues when connecting discontiguous networks.</p>
+        </li>
+        <li class="tooltip">Missing passive-interface configuration on LAN ports
+          <div class="tooltip-text">Unnecessary EIGRP processing on end-user segments</div>
+          <p>Interfaces connected to end-user segments should be configured as passive to prevent EIGRP processing.</p>
+        </li>
+        <li class="tooltip">ACL or firewall blocking EIGRP multicast traffic (224.0.0.10)
+          <div class="tooltip-text">Security rules blocking protocol communication</div>
+          <p>Access lists or firewall rules may block the multicast traffic needed for EIGRP neighbor discovery.</p>
+        </li>
       </ul>
+      
       <h3>Simulation File:</h3>
       <p>
-        <a href="simulations/EIGRP_issues.pka" download>Download Packet Tracer Simulation</a>
-      <table>
-        <thead>
-          <tr>
-            <th>Device</th>
-            <th>Interface</th>
-            <th>IP Address</th>
-            <th>Subnet Mask</th>
-            <th>Default Gateway</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>R1</td>
-            <td>G0/0</td>
-            <td>172.31.10.1</td>
-            <td>255.255.255.0</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R1</td>
-            <td>S0/0/0</td>
-            <td>172.31.40.225</td>
-            <td>255.255.255.252</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R1</td>
-            <td>S0/0/1</td>
-            <td>172.31.40.233</td>
-            <td>255.255.255.252</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R2</td>
-            <td>G0/0</td>
-            <td>172.31.20.1</td>
-            <td>255.255.255.0</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R2</td>
-            <td>S0/0/0</td>
-            <td>172.31.40.226</td>
-            <td>255.255.255.252</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R2</td>
-            <td>S0/0/1</td>
-            <td>172.31.40.229</td>
-            <td>255.255.255.252</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R2</td>
-            <td>S0/1/0</td>
-            <td>209.165.201.1</td>
-            <td>255.255.255.224</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R3</td>
-            <td>G0/0</td>
-            <td>172.31.30.1</td>
-            <td>255.255.255.0</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R3</td>
-            <td>S0/0/0</td>
-            <td>172.31.40.234</td>
-            <td>255.255.255.252</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>R3</td>
-            <td>S0/0/1</td>
-            <td>172.31.40.230</td>
-            <td>255.255.255.252</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>PC1</td>
-            <td>NIC</td>
-            <td>172.31.10.10</td>
-            <td>255.255.255.0</td>
-            <td>172.31.10.1</td>
-          </tr>
-          <tr>
-            <td>PC2</td>
-            <td>NIC</td>
-            <td>172.31.20.10</td>
-            <td>255.255.255.0</td>
-            <td>172.31.20.1</td>
-          </tr>
-          <tr>
-            <td>PC3</td>
-            <td>NIC</td>
-            <td>172.31.30.10</td>
-            <td>255.255.255.0</td>
-            <td>172.31.30.1</td>
-          </tr>
-        </tbody>
-      </table>
-      <h3>Solution Steps:</h3>
-      <ol>
-        <li><strong>Verify AS Number Consistency:</strong>
-          <pre>show running-config | section router eigrp</pre>
-          <p>Ensure all routers use the same AS number</p>
-          <img src="images/eigrp/as_number.png" alt="AS Number" style="width: 100%; max-width: 600px;">
-          <p>If their number inconsistent, fix it in configuration mode using:
-            <pre><code>
-          <ul>
-            <li>first copy EIGRP contents</li>
-            <li>no router eigrp [AS_NUM]</li>
-            <li>router eigrp [NEW_AS_NUM]</li>
-            <li>network [NETWORK] [WILDCARD_MASK]  ////Apply this for all list items</li>
-          </ul>
-          <img src="images/eigrp/fix_as_number.png" alt="Fix AS Number" style="width: 100%; max-width: 600px;">
-        </li>
+        <a href="simulations/EIGRP_issues.pka" download class="download-btn"><i class="fas fa-download"></i> Download Packet Tracer Simulation</a>
+      </p>
+      
+      <div class="tab-container">
+        <div class="tab-header">
+          <button class="tab-btn active">Network Configuration</button>
+          <button class="tab-btn">Problem Detection</button>
+          <button class="tab-btn">Solution</button>
+        </div>
         
-        <li><strong>Check EIGRP Neighbors:</strong>
-          <pre>show ip eigrp neighbors</pre>
-          <h4>
-            Investigate missing adjacencies
-          </h4>
-          <img src="images/eigrp/neighbors.png" alt="EIGRP Neighbors" style="width: 100%; max-width: 600px;">
-          <p>If there is missing adjacencies then: </p>
-          <code>
-            <ul>
-              <li>enable</li>
-              <li>configure terminal</li>
-              <li>router eigrp [AS_NUM]</li>
-              <li>network [NETWORK] [WILDCARD_MASK]</li>
-              <li>no auto-summary</li>
-            </ul>
-          </code>
+        <div class="tab-content active">
+          <h3>Table: Router Interface Configuration</h3>
+          <div class="responsive-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Device</th>
+                  <th>Interface</th>
+                  <th>IP Address</th>
+                  <th>Subnet Mask</th>
+                  <th>Default Gateway</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>R1</td>
+                  <td>G0/0</td>
+                  <td>172.31.10.1</td>
+                  <td>255.255.255.0</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R1</td>
+                  <td>S0/0/0</td>
+                  <td>172.31.40.225</td>
+                  <td>255.255.255.252</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R1</td>
+                  <td>S0/0/1</td>
+                  <td>172.31.40.233</td>
+                  <td>255.255.255.252</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R2</td>
+                  <td>G0/0</td>
+                  <td>172.31.20.1</td>
+                  <td>255.255.255.0</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R2</td>
+                  <td>S0/0/0</td>
+                  <td>172.31.40.226</td>
+                  <td>255.255.255.252</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R2</td>
+                  <td>S0/0/1</td>
+                  <td>172.31.40.229</td>
+                  <td>255.255.255.252</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R2</td>
+                  <td>S0/1/0</td>
+                  <td>209.165.201.1</td>
+                  <td>255.255.255.224</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R3</td>
+                  <td>G0/0</td>
+                  <td>172.31.30.1</td>
+                  <td>255.255.255.0</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R3</td>
+                  <td>S0/0/0</td>
+                  <td>172.31.40.234</td>
+                  <td>255.255.255.252</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>R3</td>
+                  <td>S0/0/1</td>
+                  <td>172.31.40.230</td>
+                  <td>255.255.255.252</td>
+                  <td>N/A</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <h3>Table: End Device Configuration</h3>
+          <div class="responsive-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Device</th>
+                  <th>Interface</th>
+                  <th>IP Address</th>
+                  <th>Subnet Mask</th>
+                  <th>Default Gateway</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>PC1</td>
+                  <td>NIC</td>
+                  <td>172.31.10.10</td>
+                  <td>255.255.255.0</td>
+                  <td>172.31.10.1</td>
+                </tr>
+                <tr>
+                  <td>PC2</td>
+                  <td>NIC</td>
+                  <td>172.31.20.10</td>
+                  <td>255.255.255.0</td>
+                  <td>172.31.20.1</td>
+                </tr>
+                <tr>
+                  <td>PC3</td>
+                  <td>NIC</td>
+                  <td>172.31.30.10</td>
+                  <td>255.255.255.0</td>
+                  <td>172.31.30.1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>EIGRP Configuration Issues</h3>
+          <div class="info-box info">
+            <strong>Note:</strong> When EIGRP is misconfigured, routers will not exchange routing information properly, leading to connectivity issues between different network segments.
+          </div>
+          <div class="image-container">
+            <img src="images/eigrp/as_number.png" alt="AS Number">
+            <div class="image-caption">EIGRP configurations showing inconsistent AS numbers</div>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>Solution Steps:</h3>
+          <div class="progress-bar">
+            <div class="progress-value" style="width: 0%"></div>
+          </div>
+          <ol class="solution-steps">
+            <li class="step" data-progress="25">
+              <h4>Verify AS Number Consistency</h4>
+              <p>Check the AS numbers on all routers to ensure they match:</p>
+              <pre><code>Router> enable
+Router# show running-config | section router eigrp</code></pre>
+              <div class="image-container">
+                <img src="images/eigrp/as_number.png" alt="AS Number">
+                <div class="image-caption">Router configuration showing inconsistent EIGRP AS numbers</div>
+              </div>
+              <p>If AS numbers are inconsistent, reconfigure the routers to use the same AS number:</p>
+              <pre><code>Router# configure terminal
+Router(config)# no router eigrp [OLD_AS_NUM]
+Router(config)# router eigrp [NEW_CONSISTENT_AS_NUM]
+Router(config-router)# network [NETWORK] [WILDCARD_MASK]
+Router(config-router)# no auto-summary
+Router(config-router)# exit</code></pre>
+              <div class="image-container">
+                <img src="images/eigrp/fix_as_number.png" alt="Fix AS Number">
+                <div class="image-caption">Router configuration after correcting AS number</div>
+              </div>
+            </li>
+            
+            <li class="step" data-progress="50">
+              <h4>Check EIGRP Neighbors</h4>
+              <p>Verify that EIGRP neighbors are properly established:</p>
+              <pre><code>Router# show ip eigrp neighbors</code></pre>
+              <div class="image-container">
+                <img src="images/eigrp/neighbors.png" alt="EIGRP Neighbors">
+                <div class="image-caption">EIGRP neighbor table with successfully established adjacencies</div>
+              </div>
+              <p>If neighbors are missing, ensure all network statements are correct:</p>
+              <pre><code>Router(config)# router eigrp [AS_NUM]
+Router(config-router)# network [NETWORK] [WILDCARD_MASK]
+Router(config-router)# no auto-summary
+Router(config-router)# exit</code></pre>
+              <p>The wildcard mask is the inverse of the subnet mask (e.g., 255.255.255.0 → 0.0.0.255)</p>
+            </li>
+            
+            <li class="step" data-progress="75">
+              <h4>Configure Passive Interfaces</h4>
+              <p>Configure interfaces connected to end-user segments as passive:</p>
+              <pre><code>Router(config)# router eigrp [AS_NUM]
+Router(config-router)# passive-interface GigabitEthernet0/0
+Router(config-router)# exit</code></pre>
+              <p>This prevents unnecessary EIGRP processing while still advertising the network.</p>
+            </li>
+            
+            <li class="step" data-progress="100">
+              <h4>Verify Connectivity</h4>
+              <p>Test connectivity between devices in different network segments using ping:</p>
+              <div class="image-container">
+                <img src="images/eigrp/ping.png" alt="EIGRP Ping">
+                <div class="image-caption">Successful ping test demonstrating connectivity across EIGRP-routed networks</div>
+              </div>
+              <div class="info-box success">
+                <strong>Best Practice:</strong> For internet connectivity, redistribute a static default route into EIGRP:
+                <pre><code>Router(config)# ip route 0.0.0.0 0.0.0.0 [NEXT_HOP]
+Router(config)# router eigrp [AS_NUM]
+Router(config-router)# redistribute static
+Router(config-router)# exit</code></pre>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>    <div id="switch-loop" class="problem-details">
+      <h2>8. Switch Loop Issues (Data Link Layer - Layer 2)</h2>
+      
+      <!-- Dashboard summary -->
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <h4>Difficulty Level</h4>
+          <p>Medium</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Layers</h4>
+          <p>Data Link Layer (L2)</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Protocols</h4>
+          <p>STP, RSTP, Ethernet</p>
+        </div>
+      </div>
+      
+      <h3>Problem Definition:</h3>
+      <p>Network experiences severe performance degradation or complete outage due to broadcast storms caused by switching loops, where packets circulate endlessly between interconnected switches.</p>
+      
+      <h3>Potential Causes:</h3>
+      <ul class="animate-in">
+        <li class="tooltip">Redundant physical connections between switches without proper loop prevention
+          <div class="tooltip-text">Multiple paths without STP</div>
+          <p>When multiple cables connect the same switches without STP enabled, broadcasts can loop infinitely and flood the network.</p>
         </li>
-        <li>
-          <h3>Check connectivity with ping</h3>
-          <img src="images/eigrp/ping.png" alt="EIGRP Ping" style="width: 100%; max-width: 600px;">
+        <li class="tooltip">Disabled or misconfigured STP (Spanning Tree Protocol)
+          <div class="tooltip-text">STP not working correctly</div>
+          <p>If STP is disabled or improperly configured, it cannot detect and block redundant paths, allowing loops to form.</p>
         </li>
-      </ol>
-      <h3>Important Notes:</h3>
-      <ul>
-        <li>Wildcard mask is the inverse of subnet mask (e.g., /24 → 0.0.0.255)</li>
-        <li>For internet connectivity, redistribute static default route:
-          <pre>
-          <ul>
-            <li>ip route 0.0.0.0 0.0.0.0 [NEXT_HOP]</li>
-            <li>router eigrp [AS_NUM]</li>
-            <li>redistribute static</li>
-          </ul>
-          </pre>
+        <li class="tooltip">Multiple active paths between network segments
+          <div class="tooltip-text">Redundant connections without protection</div>
+          <p>When there are multiple active paths between switches and STP is not functioning, broadcast packets can travel in circles, multiplying with each pass.</p>
+        </li>
+        <li class="tooltip">Incorrect cabling creating unintended loops
+          <div class="tooltip-text">Misconnected network cables</div>
+          <p>Accidental connections that create loops, such as connecting both ends of a cable to the same switch or creating circular paths.</p>
         </li>
       </ul>
-    </div>
-    <div id="switch-loop" class="problem-details">
-    <h2>8. Switch Loop Issues</h2>
-    
-    <h3>Problem Definition:</h3>
-    <p>Network experiences severe performance degradation or complete outage due to broadcast storms caused by switching loops, where packets circulate endlessly between interconnected switches.</p>
-    
-    <h3>Primary Symptoms:</h3>
-    <ul>
-        <li>Network slowdown or complete unresponsiveness</li>
-        <li>Switch LEDs flashing rapidly and continuously</li>
-        <li>High CPU utilization on network devices</li>
-        <li>Flapping MAC address tables</li>
-    </ul>
-    
-    <h3>Potential Causes:</h3>
-    <ul>
-        <li><strong>Redundant physical connections</strong> between switches without proper loop prevention</li>
-        <li><strong>Disabled or misconfigured STP</strong> (Spanning Tree Protocol)</li>
-        <li><strong>Multiple active paths</strong> between network segments</li>
-        <li><strong>Incorrect cabling</strong> creating unintended loops</li>
-    </ul>
-    
-    <h3>Simulation File:</h3>
-    <p><a href="simulations/Switch_Loop_Issue.pkt" download>Download Packet Tracer Simulation</a></p>
-    
-    <h3>Solution Steps:</h3>
-    <ol>
-        <li>
-            <p>Ping in network and use <code>show spanning-tree</code> in switch exec mode</p>
-            <img src="images/switch_loop/ping.png" alt="Switch Loop Ping" style="width: 100%; max-width: 600px;">
-            <img src="images/switch_loop/ping1.png" alt="Switch Loop Ping" style="width: 100%; max-width: 600px;">
-        </li>
+      
+      <h3>Simulation File:</h3>
+      <p>
+        <a href="simulations/Switch_Loop_Issue.pkt" download class="download-btn"><i class="fas fa-download"></i> Download Packet Tracer Simulation</a>
+      </p>
+      
+      <div class="tab-container">
+        <div class="tab-header">
+          <button class="tab-btn active">Network Configuration</button>
+          <button class="tab-btn">Problem Detection</button>
+          <button class="tab-btn">Solution</button>
+        </div>
         
-        <li>
-            <strong>Enable STP on All Switches</strong>
-            <p>Run the following commands on each switch to ensure STP is active on VLAN 1:</p>
-            <pre><code>Switch> enable
+        <div class="tab-content active">
+          <h3>Table: Network Topology</h3>
+          <div class="responsive-table">
+            <table>
+              <tr>
+                <th>Device</th>
+                <th>Interface</th>
+                <th>Connected To</th>
+                <th>STP Status</th>
+              </tr>
+              <tr>
+                <td>Switch1</td>
+                <td>Fa0/1</td>
+                <td>Switch2 Fa0/1</td>
+                <td>No STP blocking</td>
+              </tr>
+              <tr>
+                <td>Switch1</td>
+                <td>Fa0/2</td>
+                <td>Switch3 Fa0/1</td>
+                <td>No STP blocking</td>
+              </tr>
+              <tr>
+                <td>Switch2</td>
+                <td>Fa0/2</td>
+                <td>Switch3 Fa0/2</td>
+                <td>No STP blocking</td>
+              </tr>
+              <tr>
+                <td>Switch1</td>
+                <td>Fa0/3</td>
+                <td>PC1</td>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <td>Switch2</td>
+                <td>Fa0/3</td>
+                <td>PC2</td>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <td>Switch3</td>
+                <td>Fa0/3</td>
+                <td>PC3</td>
+                <td>N/A</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>Switch Loop Detection</h3>
+          <div class="info-box warning">
+            <strong>Warning:</strong> Layer 2 loops cause broadcast storms that can completely disable network communication. Key symptoms include high CPU usage on switches, MAC address table instability, and intermittent connectivity.
+          </div>
+          <div class="image-container">
+            <img src="images/switch_loop/ping.png" alt="Switch Loop Ping">
+            <div class="image-caption">Ping test showing excessive packet loss and timeout due to loop condition</div>
+          </div>
+          <div class="image-container">
+            <img src="images/switch_loop/ping1.png" alt="Switch Loop Ping">
+            <div class="image-caption">Additional ping tests demonstrating inconsistent connectivity during a loop condition</div>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>Solution Steps:</h3>
+          <div class="progress-bar">
+            <div class="progress-value" style="width: 0%"></div>
+          </div>
+          <ol class="solution-steps">
+            <li class="step" data-progress="20">
+              <h4>Identify the loop condition</h4>
+              <p>Verify that a switching loop exists by checking for these symptoms:</p>
+              <ul>
+                <li>Unusually high network utilization with minimal user traffic</li>
+                <li>Multiple duplicate frames observed on traffic capture</li>
+                <li>Rapidly flashing port lights on switches</li>
+                <li>Extremely slow network response or complete outage</li>
+              </ul>
+            </li>
+            
+            <li class="step" data-progress="40">
+              <h4>Enable STP on all switches</h4>
+              <p>Run the following commands on each switch to ensure STP is active on VLAN 1:</p>
+              <pre><code>Switch> enable
 Switch# configure terminal
-Switch(config)# spanning-tree vlan 1</code></pre>
-            <div class="note">
-                <strong>Explanation:</strong> This command enables Spanning Tree Protocol (STP) on VLAN 1. STP detects loops and automatically blocks redundant paths to prevent broadcast storms.
-            </div>
-        </li>
-        
-        <li>
-            <strong>Verify STP Status</strong>
-            <p>Check the STP status on each switch:</p>
-            <pre><code>Switch# show spanning-tree</code></pre>
-            <p><strong>What to look for:</strong></p>
-            <ul>
-                <li>Which switch is the Root Bridge</li>
-                <li>Port roles: Root Port (RP), Designated Port (DP), Blocking</li>
-            </ul>
-            <div class="example">
-                <strong>Example Output:</strong>
-                <pre>Interface        Role  State
-Fa0/1            Desg  Forwarding
-Fa0/2            Root  Forwarding
-Fa0/3            Altn  Blocking</pre>
-                <p>✅ Blocking port detected = STP is working and breaking the loop.</p>
-            </div>
-        </li>
-        
-        <li>
-            <strong>Wait for Convergence</strong>
-            <p>STP takes about 30-50 seconds to converge. One switch becomes the Root Bridge, all switches calculate the shortest path to the root, and redundant links are blocked.</p>
-        </li>
-        
-        <li>
-            <strong>Perform a Ping Test</strong>
-            <p>On a PC (e.g., PC1), run:</p>
-            <pre><code>ping 192.168.1.20</code></pre>
-            <p><img src="images/switch_loop/after_recovery.png" alt="Ping Test" style="width: 100%; max-width: 600px;"></p>
-            <p><strong>Expected Result:</strong> Successful pings, no broadcast storm, and smooth network response.</p>
-        </li>
-        
-        <li>
-            <strong>Check MAC Address Table Stability</strong>
-            <p>On each switch, run:</p>
-            <pre><code>Switch# show mac address-table</code></pre>
-            <p><strong>Explanation:</strong> If MAC addresses are stable and not constantly changing, STP has eliminated the loop.</p>
-        </li>
-        
-        <li>
-            <strong>(Optional) Manually Set the Root Bridge</strong>
-            <p>To force a specific switch to become the Root Bridge:</p>
-            <pre><code>Switch(config)# spanning-tree vlan 1 priority 4096</code></pre>
-            <p><strong>Note:</strong> Default STP priority is 32769. Lower values increase the chance to become Root Bridge.</p>
-        </li>
-        
-        <li>
-            <strong>(Optional) Use Rapid STP for Faster Recovery</strong>
-            <pre><code>Switch(config)# spanning-tree mode rapid-pvst</code></pre>
-            <p><strong>Explanation:</strong> Rapid PVST+ provides faster convergence than standard STP, reducing downtime in real networks.</p>
-        </li>
-    </ol>
-</div>
-    <div id="gre-issue" class="problem-details" >
-      <h2>9. GRE Tunnel Issue</h2>
+Switch(config)# spanning-tree vlan 1
+Switch(config)# exit</code></pre>
+              <p>This enables Spanning Tree Protocol on VLAN 1, which will detect and block redundant paths to prevent loops.</p>
+            </li>
+            
+            <li class="step" data-progress="60">
+              <h4>Verify STP status</h4>
+              <p>Check the STP status on each switch to confirm it's working properly:</p>
+              <pre><code>Switch# show spanning-tree</code></pre>
+              <p>Look for:</p>
+              <ul>
+                <li>Root Bridge identification (lower Bridge ID wins)</li>
+                <li>Port roles: Root Port (RP), Designated Port (DP), or Alternate (Blocking)</li>
+                <li>Port states: Forwarding (normal traffic flow) or Blocking (loop prevention)</li>
+              </ul>
+              <p>A properly functioning STP will have at least one port in Blocking state when redundant paths exist.</p>
+            </li>
+            
+            <li class="step" data-progress="80">
+              <h4>Wait for STP convergence</h4>
+              <p>STP typically takes 30-50 seconds to fully converge. During this time:</p>
+              <ol>
+                <li>Switches elect a Root Bridge</li>
+                <li>Each non-root switch identifies its best path to the root</li>
+                <li>Redundant links are automatically blocked</li>
+              </ol>
+              <p>After convergence, perform a ping test from PC1:</p>
+              <pre><code>ping 192.168.1.20</code></pre>
+              <div class="image-container">
+                <img src="images/switch_loop/after_recovery.png" alt="Ping Test">
+                <div class="image-caption">Successful ping test after STP has resolved the loop condition</div>
+              </div>
+            </li>
+            
+            <li class="step" data-progress="100">
+              <h4>Implement additional STP optimizations</h4>
+              <p>For better network performance and faster recovery:</p>
+              <ul>
+                <li>Use Rapid STP for faster convergence:
+                  <pre><code>Switch(config)# spanning-tree mode rapid-pvst</code></pre>
+                </li>
+                <li>Manually designate a root bridge by setting a lower priority:
+                  <pre><code>Switch(config)# spanning-tree vlan 1 priority 4096</code></pre>
+                </li>
+                <li>Configure PortFast on access ports connected to end devices:
+                  <pre><code>Switch(config)# interface range fa0/3-24
+Switch(config-if-range)# spanning-tree portfast
+Switch(config-if-range)# exit</code></pre>
+                </li>
+              </ul>
+              <div class="info-box success">
+                <strong>Best Practice:</strong> While redundant connections provide fault tolerance, always ensure STP is properly configured to prevent loops. Consider using modern variants like RSTP or MSTP for faster convergence and more flexible topologies.
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>    <div id="gre-issue" class="problem-details">
+      <h2>9. GRE Tunnel Issue (Network Layer - Layer 3)</h2>
+      
+      <!-- Dashboard summary -->
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <h4>Difficulty Level</h4>
+          <p>High</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Layers</h4>
+          <p>Network Layer (L3)</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Protocols</h4>
+          <p>GRE, IP, Static Routing</p>
+        </div>
+      </div>
       
       <h3>Problem Definition:</h3>
       <p>
@@ -1044,445 +1688,504 @@ Fa0/3            Altn  Blocking</pre>
       </p>
 
       <h3>Potential Causes:</h3>
-      <ul>
-        <li>Incorrect tunnel source or destination IP addresses</li>
-        <li>Wrong IP addressing on tunnel interfaces</li>
-        <li>Static routes not pointing to the tunnel interface</li>
-        <li>Physical interfaces down or misconfigured</li>
+      <ul class="animate-in">
+        <li class="tooltip">Incorrect tunnel source or destination IP addresses
+          <div class="tooltip-text">Tunnel endpoints misconfigured</div>
+          <p>When tunnel source or destination IPs don't match the actual public interfaces, packets can't be properly encapsulated or routed.</p>
+        </li>
+        <li class="tooltip">Wrong IP addressing on tunnel interfaces
+          <div class="tooltip-text">IP conflicts or subnet issues</div>
+          <p>Improper IP addressing on tunnel interfaces can prevent tunnel establishment or cause routing conflicts.</p>
+        </li>
+        <li class="tooltip">Static routes not pointing to the tunnel interface
+          <div class="tooltip-text">Routing configuration errors</div>
+          <p>Without proper static routes, traffic won't be directed through the tunnel even if the tunnel is operational.</p>
+        </li>
+        <li class="tooltip">Physical interfaces down or misconfigured
+          <div class="tooltip-text">Underlying connectivity issues</div>
+          <p>If the physical interfaces used as tunnel endpoints are down or misconfigured, the tunnel cannot establish.</p>
+        </li>
       </ul>
 
       <h3>Simulation File:</h3>
       <p>
-        <a href="simulations/gre_tunnel_issue.pka" download>Download Packet Tracer Simulation</a>
+        <a href="simulations/gre_tunnel_issue.pka" download class="download-btn"><i class="fas fa-download"></i> Download Packet Tracer Simulation</a>
       </p>
-      <h3>Table: GRE Tunnel Configuration</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Device</th>
-            <th>Interface</th>
-            <th>IP Address</th>
-            <th>Subnet Mask</th>
-            <th>Default Gateway</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>RA</td>
-            <td>G0/0</td>
-            <td>192.168.1.1</td>
-            <td>255.255.255.0</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>RA</td>
-            <td>S0/0/0</td>
-            <td>64.103.211.2</td>
-            <td>255.255.255.252</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>RA</td>
-            <td>Tunnel 0</td>
-            <td>10.10.10.1</td>
-            <td>255.255.255.252</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>RB</td>
-            <td>G0/0</td>
-            <td>192.168.2.1</td>
-            <td>255.255.255.0</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>RB</td>
-            <td>S0/0/0</td>
-            <td>209.165.122.2</td>
-            <td>255.255.255.252</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>RB</td>
-            <td>Tunnel 0</td>
-            <td>10.10.10.2</td>
-            <td>255.255.255.252</td>
-            <td>N/A</td>
-          </tr>
-          <tr>
-            <td>PC-A</td>
-            <td>NIC</td>
-            <td>192.168.1.2</td>
-            <td>255.255.255.0</td>
-            <td>192.168.1.1</td>
-          </tr>
-          <tr>
-            <td>PC-C</td>
-            <td>NIC</td>
-            <td>192.168.2.2</td>
-            <td>255.255.255.0</td>
-            <td>192.168.2.1</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3>Solution Steps:</h3>
-      <ol>
-        <li>
-          <p>Test tunnel connectivity with <code>ping</code> from one tunnel endpoint to the other (e.g., <code>ping [remote tunnel IP]</code>).</p>
-          <img src="images/gre_issue/ping_test.png" alt="Ping Test" style="width: 100%; max-width: 600px;">
-        </li>
-        <li>
-          <strong>Verify physical connectivity and interface status on both routers using <code>show ip interface brief</code>.</strong>
-          <ul>
-          <li>
-            On end devices, use <code>show ip interface brief</code> to see tunnel configurations<br>
-            <img src="images/gre_issue/shw_A.png" alt="Show IP Interface" style="width: 100%; max-width: 600px;"><br>
-            <img src="images/gre_issue/shw_B.png" alt="Show IP Interface" style="width: 100%; max-width: 600px;">
-          </li>
-          </ul>
-        </li>
-        <li>
-          <strong>If There Are Mistakes in Configuration, Configure GRE Tunnel Interfaces</strong>
-          <ul>
-            <li>
-              <strong>Step 1: Configure Tunnel 0 on RA.</strong>
-              <pre>
-        RA(config)# interface tunnel 0
-        RA(config-if)# ip address 192.168.1.1 255.255.255.252
-        RA(config-if)# tunnel source s0/0/0
-        RA(config-if)# tunnel destination 209.165.122.2
-        RA(config-if)# tunnel mode gre ip
-        RA(config-if)# no shutdown
-              </pre>
+      
+      <div class="tab-container">
+        <div class="tab-header">
+          <button class="tab-btn active">Network Configuration</button>
+          <button class="tab-btn">Problem Detection</button>
+          <button class="tab-btn">Solution</button>
+        </div>
+        
+        <div class="tab-content active">
+          <h3>Table: GRE Tunnel Configuration</h3>
+          <div class="responsive-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Device</th>
+                  <th>Interface</th>
+                  <th>IP Address</th>
+                  <th>Subnet Mask</th>
+                  <th>Default Gateway</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>RA</td>
+                  <td>G0/0</td>
+                  <td>192.168.1.1</td>
+                  <td>255.255.255.0</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>RA</td>
+                  <td>S0/0/0</td>
+                  <td>64.103.211.2</td>
+                  <td>255.255.255.252</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>RA</td>
+                  <td>Tunnel 0</td>
+                  <td class="warning">192.168.1.1</td>
+                  <td>255.255.255.252</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>RB</td>
+                  <td>G0/0</td>
+                  <td>192.168.2.1</td>
+                  <td>255.255.255.0</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>RB</td>
+                  <td>S0/0/0</td>
+                  <td>209.165.122.2</td>
+                  <td>255.255.255.252</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>RB</td>
+                  <td>Tunnel 0</td>
+                  <td>10.10.10.2</td>
+                  <td>255.255.255.252</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td>PC-A</td>
+                  <td>NIC</td>
+                  <td>192.168.1.2</td>
+                  <td>255.255.255.0</td>
+                  <td>192.168.1.1</td>
+                </tr>
+                <tr>
+                  <td>PC-C</td>
+                  <td>NIC</td>
+                  <td>192.168.2.2</td>
+                  <td>255.255.255.0</td>
+                  <td>192.168.2.1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>GRE Tunnel Issue Detection</h3>
+          <div class="info-box info">
+            <strong>Note:</strong> When GRE tunneling is not working correctly, devices in separate networks cannot communicate with each other, even though they have connectivity to their local routers.
+          </div>
+          <p>Initial connectivity testing shows tunnel failure:</p>
+          <div class="image-container">
+            <img src="images/gre_issue/ping_test.png" alt="Ping Test">
+            <div class="image-caption">Failed ping test showing lack of connectivity across the tunnel</div>
+          </div>
+          <p>Examining interface status on both routers:</p>
+          <div class="image-container">
+            <img src="images/gre_issue/shw_A.png" alt="Show IP Interface on Router A">
+            <div class="image-caption">Router A interface status showing tunnel configuration issues</div>
+          </div>
+          <div class="image-container">
+            <img src="images/gre_issue/shw_B.png" alt="Show IP Interface on Router B">
+            <div class="image-caption">Router B interface status showing correct configuration</div>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>Solution Steps:</h3>
+          <div class="progress-bar">
+            <div class="progress-value" style="width: 0%"></div>
+          </div>
+          <ol class="solution-steps">
+            <li class="step" data-progress="20">
+              <h4>Verify physical connectivity</h4>
+              <p>Ensure physical interfaces used for the tunnel are up and properly connected:</p>
+              <pre><code>Router> enable
+Router# show ip interface brief</code></pre>
+              <p>Both routers' serial interfaces should be up and have the correct IP addresses.</p>
             </li>
-            <li>
-              <strong>Step 2: Configure Tunnel 0 on RB.</strong>
-              <pre>
-        RB(config)# interface tunnel 0
-        RB(config-if)# ip address 10.10.10.2 255.255.255.252
-        RB(config-if)# tunnel source s0/0/0
-        RB(config-if)# tunnel destination 64.103.211.2
-        RB(config-if)# tunnel mode gre ip
-        RB(config-if)# no shutdown
-              </pre>
+            
+            <li class="step" data-progress="40">
+              <h4>Fix tunnel configuration on Router A</h4>
+              <p>Correct the tunnel interface IP address and configuration on Router A:</p>
+              <pre><code>RA# configure terminal
+RA(config)# interface tunnel 0
+RA(config-if)# ip address 10.10.10.1 255.255.255.252
+RA(config-if)# tunnel source s0/0/0
+RA(config-if)# tunnel destination 209.165.122.2
+RA(config-if)# tunnel mode gre ip
+RA(config-if)# no shutdown
+RA(config-if)# exit</code></pre>
+              <p>The issue was that Router A had an incorrect tunnel IP address that conflicted with its physical interface.</p>
             </li>
-          </ul>
+            
+            <li class="step" data-progress="60">
+              <h4>Verify tunnel configuration on Router B</h4>
+              <p>Ensure Router B's tunnel is properly configured:</p>
+              <pre><code>RB# show running-config interface tunnel 0</code></pre>
+              <p>If needed, correct any configuration issues:</p>
+              <pre><code>RB# configure terminal
+RB(config)# interface tunnel 0
+RB(config-if)# ip address 10.10.10.2 255.255.255.252
+RB(config-if)# tunnel source s0/0/0
+RB(config-if)# tunnel destination 64.103.211.2
+RB(config-if)# tunnel mode gre ip
+RB(config-if)# no shutdown
+RB(config-if)# exit</code></pre>
             </li>
-        <li>
-          <strong>Configure Static Routes for Private IP Traffic</strong>
-          <ul>
-          <li>
-            <strong>Step 3: Configure a static route for private IP traffic.(ip route [network address] [tunnel interface address(global)])</strong>
-            <pre>
-      RA(config)# ip route 172.31.1.0 255.255.255.0 64.103.211.2
-      RB(config)# ip route 192.168.1.0 255.255.255.0 10.10.10.1
-            </pre>
-          </li>
-          </ul>
-        </li>
-        <li>
-          <strong>Check tunnel configuration with <code>show running-config</code> and <code>show interfaces tunnel X</code>.</strong>
-        </li>
-        <li>
-          <strong>Correct tunnel source and destination IP addresses to match the physical interface IPs.</strong>
-        </li>
-        <li>
-          <strong>Assign correct IP addresses to tunnel interfaces.</strong>
-        </li>
-        <li>
-          <p><strong>Update static routes to use the tunnel interface as the next hop.</strong></p>
-          <img src="images/gre_issue/static_tunnel.png" alt="Static Route" style="width: 100%; max-width: 600px;">
-        </li>
-        <li>
-          <strong>Ensure all interfaces are enabled with <code>no shutdown</code>.</strong>
-        </li>
-        <li>
-          <strong>Test connectivity with <code>ping</code> between remote networks.</strong>
-          <ul>
-          <li>
-            <strong>Step 1: Ping PCA from PCB.</strong><br>
-            <p>
-            After configuration, ping PCA from PCB. The ping should now succeed.
-            </p>
-            <img src="images/gre_issue/chek_last_ping.png" alt="Ping Test" style="width: 100%; max-width: 600px;">
-          </li>
-          <li>
-            <strong>Step 2: Trace the path from PCA to PCB.</strong><br>
-            Use <code>tracert</code> or <code>traceroute</code> to verify the path. You should not see public IPs in the output, confirming GRE encapsulation.
-          </li>
-          </ul>
-        </li>
-      </ol>
-    </div>
-    <div id="etherChannel-issue" class="problem-details" >
-      <h2>10. EtherChannel Issue</h2>
+            
+            <li class="step" data-progress="80">
+              <h4>Configure static routes to direct traffic through the tunnel</h4>
+              <p>Add static routes on both routers to direct traffic for remote networks through the tunnel:</p>
+              <pre><code>RA(config)# ip route 192.168.2.0 255.255.255.0 10.10.10.2
+RB(config)# ip route 192.168.1.0 255.255.255.0 10.10.10.1</code></pre>
+              <div class="image-container">
+                <img src="images/gre_issue/static_tunnel.png" alt="Static Route Configuration">
+                <div class="image-caption">Static route configuration directing traffic through the tunnel</div>
+              </div>
+            </li>
+            
+            <li class="step" data-progress="100">
+              <h4>Verify connectivity through the tunnel</h4>
+              <p>Test connectivity between devices in the separate networks:</p>
+              <div class="image-container">
+                <img src="images/gre_issue/chek_last_ping.png" alt="Successful Ping Through Tunnel">
+                <div class="image-caption">Successful ping test showing connectivity through the GRE tunnel</div>
+              </div>
+              <p>Additionally, you can use traceroute to verify the path through the tunnel:</p>
+              <pre><code>PC-A> tracert 192.168.2.2</code></pre>
+              <div class="info-box success">
+                <strong>Best Practice:</strong> For production environments, consider implementing dynamic routing protocols over the GRE tunnel to automatically propagate route information between sites. This improves scalability and reduces manual configuration.
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>    <div id="etherChannel-issue" class="problem-details">
+      <h2>10. EtherChannel Issue (Data Link Layer - Layer 2)</h2>
+      
+      <!-- Dashboard summary -->
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <h4>Difficulty Level</h4>
+          <p>Medium</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Layers</h4>
+          <p>Data Link Layer (L2)</p>
+        </div>
+        <div class="dashboard-card">
+          <h4>Related Protocols</h4>
+          <p>LACP, PAgP, Spanning Tree</p>
+        </div>
+      </div>
+      
       <h3>Problem Definition:</h3>
       <p>EtherChannel is a technology that allows multiple physical links
          to be bundled into a single logical link for increased bandwidth and redundancy.
           Misconfiguration of EtherChannel can lead to network performance issues, 
           including packet loss, slow connectivity, or complete link failure.</p>
+      
       <h3>Potential Causes:</h3>
-      <ul>
-        <li>Inconsistent configurations on bundled interfaces</li>
-        <li>Incorrect EtherChannel mode (e.g., active, passive, on)</li>
-        <li>Physical link issues or mismatched speed/duplex settings</li>
-        <li>VLAN mismatch on bundled interfaces</li>
-        <li>STP misconfiguration causing blocking of EtherChannel</li>
+      <ul class="animate-in">
+        <li class="tooltip">Inconsistent configurations on bundled interfaces
+          <div class="tooltip-text">Mismatched settings between ports in the same channel</div>
+          <p>All ports in an EtherChannel must have identical configurations including speed, duplex, and VLAN settings.</p>
+        </li>
+        <li class="tooltip">Incorrect EtherChannel mode (e.g., active, passive, on)
+          <div class="tooltip-text">Protocol mismatch between switches</div>
+          <p>Both ends of an EtherChannel must use compatible modes for the same protocol (LACP or PAgP).</p>
+        </li>
+        <li class="tooltip">Physical link issues or mismatched speed/duplex settings
+          <div class="tooltip-text">Layer 1 configuration errors</div>
+          <p>Cable problems or port speed/duplex mismatches can prevent channels from forming properly.</p>
+        </li>
+        <li class="tooltip">VLAN mismatch on bundled interfaces
+          <div class="tooltip-text">Inconsistent VLAN configuration</div>
+          <p>Ports in the same EtherChannel must belong to identical VLANs and have the same trunking configuration.</p>
+        </li>
+        <li class="tooltip">STP misconfiguration causing blocking of EtherChannel
+          <div class="tooltip-text">STP treating channel ports individually</div>
+          <p>If not properly configured, STP might block some ports in the channel, reducing bandwidth or causing connectivity issues.</p>
+        </li>
       </ul>
 
       <h3>Simulation File:</h3>
       <p>
-        <a href="simulations/etherchannel_issue.pka" download>Download Packet Tracer Simulation</a>
+        <a href="simulations/etherchannel_issue.pka" download class="download-btn"><i class="fas fa-download"></i> Download Packet Tracer Simulation</a>
       </p>
-      <h3>Port Channel Table</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Channel Group</th>
-            <th>Ports</th>
-            <th>Protocol</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>
-              S1: G0/1, G0/2<br>
-              S2: G0/1, G0/2
-            </td>
-            <td>LACP active</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>
-              S2: G0/1, G0/2<br>
-              S4: G0/1, G0/2
-            </td>
-            <td>LACP active</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>
-              S1: F0/23, F0/24<br>
-              S2: F0/23, F0/24
-            </td>
-            <td>LACP active</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>
-              S3: F0/23, F0/24<br>
-              S4: F0/23, F0/24
-            </td>
-            <td>LACP active</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>
-              S1: F0/21, F0/22<br>
-              S4: F0/21, F0/22
-            </td>
-            <td>LACP active</td>
-          </tr>
-          <tr>
-            <td>6</td>
-            <td>
-              S2: F0/21, F0/22<br>
-              S3: F0/21, F0/22
-            </td>
-            <td>LACP active</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3>Device Table</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Device</th>
-            <th>Group</th>
-            <th>Ports</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>S1</td>
-            <td>1</td>
-            <td>G0/1, G0/2</td>
-          </tr>
-          <tr>
-            <td>S1</td>
-            <td>3</td>
-            <td>F0/23, F0/24</td>
-          </tr>
-          <tr>
-            <td>S1</td>
-            <td>5</td>
-            <td>F0/21, F0/22</td>
-          </tr>
-          <tr>
-            <td>S2</td>
-            <td>2</td>
-            <td>G0/1, G0/2</td>
-          </tr>
-          <tr>
-            <td>S2</td>
-            <td>3</td>
-            <td>F0/23, F0/24</td>
-          </tr>
-          <tr>
-            <td>S2</td>
-            <td>6</td>
-            <td>F0/21, F0/22</td>
-          </tr>
-          <tr>
-            <td>S3</td>
-            <td>1</td>
-            <td>G0/1, G0/2</td>
-          </tr>
-          <tr>
-            <td>S3</td>
-            <td>4</td>
-            <td>F0/23, F0/24</td>
-          </tr>
-          <tr>
-            <td>S3</td>
-            <td>6</td>
-            <td>F0/21, F0/22</td>
-          </tr>
-          <tr>
-            <td>S4</td>
-            <td>2</td>
-            <td>G0/1, G0/2</td>
-          </tr>
-          <tr>
-            <td>S4</td>
-            <td>4</td>
-            <td>F0/23, F0/24</td>
-          </tr>
-          <tr>
-            <td>S4</td>
-            <td>5</td>
-            <td>F0/21, F0/22</td>
-          </tr>
-        </tbody>
-      </table>
-      <h3>Solution Steps:</h3>
-      <ol>
-        <li>
-          <strong>Verify EtherChannel Status:</strong>
-          <ul>
-            <li>Use <code>show etherchannel summary</code> in exec mode on all switches to check the status of each port channel.</li>
-            <li>Look for port channels that are <strong>down</strong> or have mismatched protocols (e.g., LACP vs. PAgP).</li>
-            <li><strong>LACP (Link Aggregation Control Protocol)</strong> is an IEEE standard protocol
-               (802.3ad) used to automatically bundle multiple physical links into a single logical
-                channel for redundancy and increased bandwidth.</li>
-          </ul>
-        </li>
-        <li>
-          <strong>Ensure Consistent Protocols:</strong>
-          <ul>
-            <li>
-              <strong>Port Channel 1:</strong> One of the switches is not using LACP.<br>
-              <img src="images/etherchannel/issue_pc1.png" alt="EtherChannel Summary" style="width: 100%; max-width: 600px;">
+      
+      <div class="tab-container">
+        <div class="tab-header">
+          <button class="tab-btn active">Network Configuration</button>
+          <button class="tab-btn">Problem Detection</button>
+          <button class="tab-btn">Solution</button>
+        </div>
+        
+        <div class="tab-content active">
+          <h3>Table: Port Channel Design</h3>
+          <div class="responsive-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Channel Group</th>
+                  <th>Ports</th>
+                  <th>Protocol</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>
+                    S1: G0/1, G0/2<br>
+                    S3: G0/1, G0/2
+                  </td>
+                  <td>LACP active</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>
+                    S2: G0/1, G0/2<br>
+                    S4: G0/1, G0/2
+                  </td>
+                  <td>LACP active</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>
+                    S1: F0/23, F0/24<br>
+                    S2: F0/23, F0/24
+                  </td>
+                  <td>LACP active</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>
+                    S3: F0/23, F0/24<br>
+                    S4: F0/23, F0/24
+                  </td>
+                  <td>LACP active</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>
+                    S1: F0/21, F0/22<br>
+                    S4: F0/21, F0/22
+                  </td>
+                  <td>LACP active</td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td>
+                    S2: F0/21, F0/22<br>
+                    S3: F0/21, F0/22
+                  </td>
+                  <td>LACP active</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <h3>Table: Switch Port Channel Assignments</h3>
+          <div class="responsive-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Device</th>
+                  <th>Group</th>
+                  <th>Ports</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>S1</td>
+                  <td>1</td>
+                  <td>G0/1, G0/2</td>
+                </tr>
+                <tr>
+                  <td>S1</td>
+                  <td>3</td>
+                  <td>F0/23, F0/24</td>
+                </tr>
+                <tr>
+                  <td>S1</td>
+                  <td>5</td>
+                  <td>F0/21, F0/22</td>
+                </tr>
+                <tr>
+                  <td>S2</td>
+                  <td>2</td>
+                  <td>G0/1, G0/2</td>
+                </tr>
+                <tr>
+                  <td>S2</td>
+                  <td>3</td>
+                  <td>F0/23, F0/24</td>
+                </tr>
+                <tr>
+                  <td>S2</td>
+                  <td>6</td>
+                  <td>F0/21, F0/22</td>
+                </tr>
+                <tr>
+                  <td>S3</td>
+                  <td>1</td>
+                  <td>G0/1, G0/2</td>
+                </tr>
+                <tr>
+                  <td>S3</td>
+                  <td>4</td>
+                  <td>F0/23, F0/24</td>
+                </tr>
+                <tr>
+                  <td>S3</td>
+                  <td>6</td>
+                  <td>F0/21, F0/22</td>
+                </tr>
+                <tr>
+                  <td>S4</td>
+                  <td>2</td>
+                  <td>G0/1, G0/2</td>
+                </tr>
+                <tr>
+                  <td>S4</td>
+                  <td>4</td>
+                  <td>F0/23, F0/24</td>
+                </tr>
+                <tr>
+                  <td>S4</td>
+                  <td>5</td>
+                  <td>F0/21, F0/22</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>EtherChannel Status Verification</h3>
+          <div class="info-box info">
+            <strong>Note:</strong> When EtherChannel is misconfigured, interfaces may show as individual links rather than bundled, or may appear in an inconsistent state between switches.
+          </div>
+          
+          <div class="image-container">
+            <img src="images/etherchannel/issue_pc1.png" alt="Port Channel 1 Issue">
+            <div class="image-caption">Port Channel 1: Protocol mismatch between switches</div>
+          </div>
+          
+          <div class="image-container">
+            <img src="images/etherchannel/issue_pc4.png" alt="Port Channel 4 Issue">
+            <div class="image-caption">Port Channel 4: One switch not using LACP</div>
+          </div>
+          
+          <div class="image-container">
+            <img src="images/etherchannel/issue_pc5.png" alt="Port Channel 5 Issue">
+            <div class="image-caption">Port Channel 5: Missing port channel definition on one switch</div>
+          </div>
+          
+          <div class="image-container">
+            <img src="images/etherchannel/issue_trunk.png" alt="Trunk Mode Issue">
+            <div class="image-caption">Interfaces showing incorrect trunk mode configuration</div>
+          </div>
+        </div>
+        
+        <div class="tab-content">
+          <h3>Solution Steps:</h3>
+          <div class="progress-bar">
+            <div class="progress-value" style="width: 0%"></div>
+          </div>
+          <ol class="solution-steps">
+            <li class="step" data-progress="20">
+              <h4>Verify EtherChannel status on all switches</h4>
+              <p>Check the current status of all EtherChannel groups on each switch:</p>
+              <pre><code>Switch> enable
+Switch# show etherchannel summary</code></pre>
+              <p>Look for port channels that are down or have mismatched protocols (e.g., LACP vs. PAgP). Note that all EtherChannels in this scenario should use LACP active mode on both ends.</p>
             </li>
-            <li>
-              <strong>Port Channel 2:</strong> No problem.<br>
-              <img src="images/etherchannel/issue_pc2.png" alt="EtherChannel Summary" style="width: 100%; max-width: 600px;">
+            
+            <li class="step" data-progress="40">
+              <h4>Fix protocol mismatches in Port Channels 1, 4, and 6</h4>
+              <p>These port channels show protocol mismatches where one switch is not using LACP. To fix this, reconfigure the EtherChannels with the correct protocol:</p>
+              <pre><code>Switch# configure terminal
+Switch(config)# no interface port-channel [1|4|6]
+Switch(config)# interface range [appropriate interfaces]
+Switch(config-if-range)# no channel-group
+Switch(config-if-range)# channel-group [1|4|6] mode active
+Switch(config-if-range)# no shutdown
+Switch(config-if-range)# exit
+Switch(config)# interface port-channel [1|4|6]
+Switch(config-if)# switchport mode trunk
+Switch(config-if)# exit</code></pre>
             </li>
-            <li>
-              <strong>Port Channel 3:</strong> No problem.<br>
-              <img src="images/etherchannel/issue_pc3.png" alt="EtherChannel Summary" style="width: 100%; max-width: 600px;">
+            
+            <li class="step" data-progress="60">
+              <h4>Configure missing Port Channel 5</h4>
+              <p>Port Channel 5 is not defined on one switch. Create it with the correct configuration:</p>
+              <pre><code>Switch# configure terminal
+Switch(config)# interface range fa0/21-22
+Switch(config-if-range)# channel-group 5 mode active
+Switch(config-if-range)# no shutdown
+Switch(config-if-range)# exit
+Switch(config)# interface port-channel 5
+Switch(config-if)# switchport mode trunk
+Switch(config-if)# exit</code></pre>
             </li>
-            <li>
-              <strong>Port Channel 4:</strong> One of the switches is not using LACP.<br>
-              <img src="images/etherchannel/issue_pc4.png" alt="EtherChannel Summary" style="width: 100%; max-width: 600px;">
+            
+            <li class="step" data-progress="80">
+              <h4>Fix trunk mode configuration</h4>
+              <p>Ensure all port channels and their member interfaces are properly configured as trunk ports:</p>
+              <pre><code>Switch# configure terminal
+Switch(config)# interface port-channel [channel-number]
+Switch(config-if)# switchport mode trunk
+Switch(config-if)# exit</code></pre>
+              <p>For member interfaces that may not have inherited the trunk configuration:</p>
+              <pre><code>Switch(config)# interface range [interface range]
+Switch(config-if-range)# switchport mode trunk
+Switch(config-if-range)# exit</code></pre>
             </li>
-            <li>
-              <strong>Port Channel 5:</strong> One switch has not defined the port channel.<br>
-              <img src="images/etherchannel/issue_pc5.png" alt="EtherChannel Summary" style="width: 100%; max-width: 600px;">
+            
+            <li class="step" data-progress="100">
+              <h4>Verify final EtherChannel configuration</h4>
+              <p>After making all changes, verify that all EtherChannels are properly configured and operational:</p>
+              <pre><code>Switch# show etherchannel summary</code></pre>
+              <p>Look for:</p>
+              <ul>
+                <li>All port channels show as "SU" (Layer 2, up)</li>
+                <li>All member ports show as "P" (port is bundled in port-channel)</li>
+                <li>The correct protocol (LACP) is in use for all port channels</li>
+              </ul>
+              <p>Additionally, check spanning tree status to ensure it recognizes the EtherChannels as single logical links:</p>
+              <pre><code>Switch# show spanning-tree</code></pre>
+              <div class="info-box success">
+                <strong>Best Practice:</strong> When configuring EtherChannels, always ensure consistent settings on all ports in the bundle, including speed, duplex, VLAN membership, and trunking mode. Use the same EtherChannel protocol (LACP or PAgP) on both ends, and verify that both switches use compatible modes.
+              </div>
             </li>
-            <li>
-              <strong>Port Channel 6:</strong> One of the switches is not using LACP.<br>
-              <img src="images/etherchannel/issue_pc6.png" alt="EtherChannel Summary" style="width: 100%; max-width: 600px;">
-            </li>
-          </ul>
-          <ul>
-            <li>All EtherChannels in this scenario should use <strong>LACP active</strong> mode on both ends.</li>
-            <li>If a port channel is using PAgP or another mode, remove and reconfigure it with LACP active.</li>
-            <li>
-              <pre><code>
-      no interface port-channel X
-      interface range [interfaces]
-      channel-group X mode active
-      no shutdown
-      interface port-channel X
-      switchport mode trunk
-              </code></pre>
-            </li>
-            <li>If a port channel is not defined, configure it using the appropriate channel-group commands on both switches.</li>
-            <li>
-              <pre><code>
-      interface range [interfaces]
-      channel-group X mode active
-      no shutdown
-      interface port-channel X
-      switchport mode trunk
-              </code></pre>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <strong>Check and Correct Port Assignments:</strong>
-          <ul>
-            <li>Ensure only the correct interfaces are assigned to each port channel as per the topology chart.</li>
-            <li>Remove any extra interfaces from the group if present.</li>
-          </ul>
-        </li>
-        <li>
-          <strong>Set Trunking Mode:</strong>
-          <ul>
-            <li>All port channels and their member interfaces should be set to <code>switchport mode trunk</code>.</li>
-            <li>Check with <code>show run</code> and correct any that are in access mode.</li>
-            <img src="images/etherchannel/issue_trunk.png" alt="EtherChannel Trunk" style="width: 100%; max-width: 600px;">
-            <li>Use the following commands to set trunking mode:</li>
-            <li>
-              <pre><code>
-      interface port-channel X
-      switchport mode trunk
-              </code></pre>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <strong>Enable Interfaces:</strong>
-          <ul>
-            <li>After removing/re-adding interfaces, use <code>no shutdown</code> to bring them up.</li>
-          </ul>
-        </li>
-        <li>
-          <strong>Verify Operation:</strong>
-          <ul>
-            <li>Use <code>show etherchannel summary</code> to confirm all port channels are <strong>up</strong> and using <strong>LACP</strong>.</li>
-            <li>Look for <code>SU</code> (Layer 2, up) and <code>P</code> (port is bundled) in the output.</li>
-          </ul>
-        </li>
-        <li>
-          <strong>Check for Redundancy and Loops:</strong>
-          <ul>
-            <li>STP should block redundant links to prevent loops. Use <code>show spanning-tree</code> to verify.</li>
-          </ul>
-        </li>
-      </ol>
-      <h3>Verification:</h3>
-      <ul>
-        <li><code>show etherchannel summary</code> – Check status and protocol</li>
-        <li><code>show run</code> – Confirm trunking mode</li>
-        <li><code>show interfaces status</code> – Ensure interfaces are up</li>
-      </ul>
-      <div class="note">
-        <strong>Note:</strong> All EtherChannels must use the same protocol and mode on both ends. Always verify trunking and interface status after changes.
+          </ol>
+        </div>
       </div>
     </div>
   </div>
@@ -1491,7 +2194,7 @@ Fa0/3            Altn  Blocking</pre>
 <script src="js/main.js"></script>
 
 <footer style="text-align:center; margin-top:40px; font-size:0.95em; color:#888;">
-  <span style="font-size:1.1em;">&copy;</span> Developed by Hamza Kızıltoprak
+  <span style="font-size:1.1em;">&copy;</span> Developed by Hamza Kızıltoprak-210315037
 </footer>
 </body>
 </html>
